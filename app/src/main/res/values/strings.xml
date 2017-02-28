@@ -1,3 +1,7 @@
 <resources>
-    <string name="app_name">MultiSpeechAPP</string>
+    <string name="app_name">Shopping List</string>
+    <string name="label_android_speech">Android Speech</string>
+    <string name="label_ibm_watson">IBM Watson</string>
+    <string name="label_google_machine">Google machine</string>
+    <string name="action_settings">Settings</string>
 </resources>
