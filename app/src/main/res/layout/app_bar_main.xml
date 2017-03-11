@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.bams.android.multispeechapp.MainActivity">
+    tools:context="com.bams.android.multispeechapp.ui.dashboard.DashboardActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -15,9 +15,12 @@
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
+            android:title="@string/app_name"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppMultiSpeech" />
+            app:popupTheme="@style/AppMultiSpeech">
+
+            </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -36,7 +39,7 @@
         app:menu_colorPressed="@color/appGreen"
         app:menu_fab_label="Speech Service"
         app:menu_icon="@android:drawable/ic_menu_manage"
-        app:menu_labels_colorNormal="#79000000"
+        app:menu_labels_colorNormal="#79353333"
         app:menu_labels_ellipsize="end"
         app:menu_labels_singleLine="true">
 
@@ -71,5 +74,6 @@
             app:fab_size="mini" />
 
     </com.github.clans.fab.FloatingActionMenu>
+
 
 </android.support.design.widget.CoordinatorLayout>
