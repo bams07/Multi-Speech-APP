@@ -1,4 +1,4 @@
-package com.bams.android.multispeechapp.ui.dashboard;
+package com.bams.android.multispeechapp.Presenter;
 
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 
@@ -10,7 +10,9 @@ public interface IDashboardPresenter {
 
     void onOpenModalAdd();
 
-    void onAddProduct();
+    void onAddProduct(String data);
+
+    void onListenToAdd();
 
     void changeSpeechEngine(EngineSpeech engineSpeech);
 }

@@ -1,9 +1,12 @@
 package com.bams.android.multispeechapp.ui.dashboard;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,10 +15,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
-import com.bams.android.multispeechapp.Data.AndroidSpeechRepository;
-import com.bams.android.multispeechapp.Data.IbmWatsonRepository;
-import com.bams.android.multispeechapp.Data.Repository;
+import com.bams.android.multispeechapp.Constants.RequestCodes;
+import com.bams.android.multispeechapp.Data.EngineSpeech.IbmWatsonRepositoryEngineSpeech;
+import com.bams.android.multispeechapp.Data.DashboardInteractor;
+import com.bams.android.multispeechapp.Presenter.DashboardPresenter;
+import com.bams.android.multispeechapp.Presenter.IDashboardPresenter;
 import com.bams.android.multispeechapp.R;
 import com.bams.android.multispeechapp.ui.Reports.ReportsFragment;
 import com.bams.android.multispeechapp.ui.ShoppingList.ShoppingListFragment;
@@ -46,7 +52,9 @@ public class DashboardActivity extends AppCompatActivity
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
 
+
     private IDashboardPresenter presenter;
+    public FragmentManager fragmentManager = getSupportFragmentManager();
     private final int DISELECTED_COLOR = Color.WHITE;
     private final int SELECTED_COLOR = Color.YELLOW;
 
@@ -63,8 +71,33 @@ public class DashboardActivity extends AppCompatActivity
         toggle.syncState();
 
         navView.setNavigationItemSelectedListener(this);
-        presenter = new DashboardPresenter(this, new DashboardInteractor(), new IbmWatsonRepository());
+        presenter = new DashboardPresenter(this, this, new DashboardInteractor(), new IbmWatsonRepositoryEngineSpeech(this));
 
+        if (savedInstanceState == null) {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            ShoppingListFragment fragment = new ShoppingListFragment();
+            transaction.replace(R.id.content_main, fragment);
+            transaction.commit();
+        }
+
+        fragmentManager.beginTransaction().replace(R.id.content_main, new ShoppingListFragment()).commit();
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK) {
+            String txt = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0).toString();
+            switch (requestCode) {
+                case RequestCodes.ANDROID_SPEECH_CODE:
+                        presenter.onAddProduct(txt);
+                    break;
+            }
+
+        } else {
+            Toast.makeText(getApplicationContext(), "ERROR TO GET DATA", Toast.LENGTH_SHORT).show();
+
+        }
     }
 
     @Override
@@ -90,11 +123,12 @@ public class DashboardActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_add_product:
+                presenter.onListenToAdd();
+                break;
         }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -138,7 +172,6 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     public void changeFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
         switch (fragment) {
             case SHOPPING_LIST_FRAGMENT:
                 fragmentManager.beginTransaction().replace(R.id.content_main, new ShoppingListFragment()).commit();
