@@ -2,6 +2,7 @@ package com.bams.android.multispeechapp.Domain;
 
 import com.bams.android.multispeechapp.Constants.ProductStatus;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -10,20 +11,21 @@ import java.util.Date;
 
 public class Product {
 
+//    public String uid;
     public String name;
     public String brand;
     public String quantity;
-    public Date createdAt;
+    public Date date;
     public String status;
 
     public Product() {
     }
 
-    public Product(String name, String brand, String quantity, Date createdAt, String status) {
+    public Product(String name, String brand, String quantity, Date date, String status) {
         this.name = name;
         this.brand = brand;
         this.quantity = quantity;
-        this.createdAt = createdAt;
+        this.date = date;
         this.status = status;
     }
 
@@ -33,8 +35,8 @@ public class Product {
     }
 
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
+    public void setDate (Date date) {
+        this.date = date;
     }
 
     public void setName(String name) {
@@ -61,11 +63,12 @@ public class Product {
         return quantity;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
+    public Date getDate(){
+        return this.date;
     }
 
     public String getStatus() {
         return status;
     }
+
 }

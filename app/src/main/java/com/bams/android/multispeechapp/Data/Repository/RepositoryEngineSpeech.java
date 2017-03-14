@@ -8,9 +8,9 @@ public interface RepositoryEngineSpeech {
 
     void startRecognition();
 
-    void onError();
+    void onError(String error);
 
-    void onResponse(String value);
+    void onResponse(String data);
 
     boolean isConnected();
 

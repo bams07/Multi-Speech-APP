@@ -18,8 +18,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.bams.android.multispeechapp.Constants.RequestCodes;
-import com.bams.android.multispeechapp.Data.EngineSpeech.IbmWatsonRepositoryEngineSpeech;
-import com.bams.android.multispeechapp.Data.DashboardInteractor;
 import com.bams.android.multispeechapp.Presenter.DashboardPresenter;
 import com.bams.android.multispeechapp.Presenter.IDashboardPresenter;
 import com.bams.android.multispeechapp.R;
@@ -71,7 +69,8 @@ public class DashboardActivity extends AppCompatActivity
         toggle.syncState();
 
         navView.setNavigationItemSelectedListener(this);
-        presenter = new DashboardPresenter(this, this, new DashboardInteractor(), new IbmWatsonRepositoryEngineSpeech(this));
+
+        presenter = new DashboardPresenter(this, this);
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -84,13 +83,19 @@ public class DashboardActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.onResume();
+    }
+
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             String txt = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0).toString();
             switch (requestCode) {
                 case RequestCodes.ANDROID_SPEECH_CODE:
-                        presenter.onAddProduct(txt);
+                        presenter.addProduct(txt);
                     break;
             }
 
@@ -215,5 +220,10 @@ public class DashboardActivity extends AppCompatActivity
                 menuBtnGoogleMachine.setColorNormal(DISELECTED_COLOR);
                 break;
         }
+    }
+
+    @Override
+    public void showProductAdded() {
+        Toast.makeText(this, "NEW PRODUCT ADDED", Toast.LENGTH_SHORT).show();
     }
 }

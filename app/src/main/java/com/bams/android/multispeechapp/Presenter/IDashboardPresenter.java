@@ -8,9 +8,9 @@ import com.bams.android.multispeechapp.Constants.EngineSpeech;
 
 public interface IDashboardPresenter {
 
-    void onOpenModalAdd();
+    void onResume();
 
-    void onAddProduct(String data);
+    void addProduct(String data);
 
     void onListenToAdd();
 

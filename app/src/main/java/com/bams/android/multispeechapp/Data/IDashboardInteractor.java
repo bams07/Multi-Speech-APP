@@ -10,22 +10,19 @@ import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
  */
 public interface IDashboardInteractor {
 
-    void setRepositoryEngineSpeech(RepositoryEngineSpeech repositoryEngineSpeech);
+    void setIbmWatson(EngineSpeech engineSpeech, DashboardInteractor.Callback callback);
 
-    void setCallback(Callback callback);
+    void setAndroidSpeech(EngineSpeech engineSpeech, DashboardInteractor.Callback callback);
 
-    void setIbmWatson(EngineSpeech engineSpeech);
-
-    void setAndroidSpeech(EngineSpeech engineSpeech);
-
-    void setGoogleMachineLearning(EngineSpeech engineSpeech);
-
-    void setContext(Context context);
+    void setGoogleMachineLearning(EngineSpeech engineSpeech, DashboardInteractor.Callback callback);
 
     void onListenToAdd();
 
     interface Callback {
         void onChangeEngine(EngineSpeech engineSpeech);
+
+        void onAddProduct();
+
     }
 
 

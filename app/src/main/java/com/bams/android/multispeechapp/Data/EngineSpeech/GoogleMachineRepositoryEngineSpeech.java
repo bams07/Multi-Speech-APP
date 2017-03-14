@@ -22,12 +22,12 @@ public class GoogleMachineRepositoryEngineSpeech implements RepositoryEngineSpee
     }
 
     @Override
-    public void onError() {
+    public void onError(String error) {
 
     }
 
     @Override
-    public void onResponse(String value) {
+    public void onResponse(String data) {
 
     }
 

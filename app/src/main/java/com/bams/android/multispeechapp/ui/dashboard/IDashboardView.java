@@ -14,5 +14,6 @@ public interface IDashboardView {
 
     void setMenuDisSelectedEngine(EngineSpeech engineSpeech);
 
+    void showProductAdded();
 
 }

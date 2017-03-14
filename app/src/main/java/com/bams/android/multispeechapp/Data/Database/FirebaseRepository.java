@@ -18,17 +18,18 @@ import java.util.List;
  * Created by bams on 3/11/17.
  */
 
-public class Firebase implements RepositoryDatabase {
+public class FirebaseRepository implements RepositoryDatabase {
 
     private final String LIST = "products";
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
     private List<Product> items;
 
-    public Firebase() {
+    public FirebaseRepository() {
         mDatabase = FirebaseDatabase.getInstance();
-        mReference = mDatabase.getReference("products");
+        mReference = mDatabase.getReference(LIST);
     }
+
 
     @Override
     public void add(Product item) {

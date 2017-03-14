@@ -31,9 +31,9 @@
             <TextView
                 android:id="@+id/product_date"
                 android:layout_column="0"
-                android:layout_columnWeight="2"
                 android:fontFamily="Arial"
                 android:text="22/07/2017 20:06:10"
+                android:layout_gravity="start"
                 android:textColor="#000"
                 android:textSize="15dp"
                 android:textStyle="normal|bold"
@@ -43,6 +43,7 @@
                 android:id="@+id/product_status"
                 android:layout_column="1"
                 android:fontFamily="Arial"
+                android:layout_gravity="end"
                 android:text="PENDENT"
                 android:textColor="#fc0000"
                 android:textSize="15dp"

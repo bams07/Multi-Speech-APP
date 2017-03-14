@@ -16,40 +16,29 @@ import com.bams.android.multispeechapp.Data.IDashboardInteractor;
 public class DashboardInteractor implements IDashboardInteractor {
 
     private RepositoryEngineSpeech repository;
-    private IDashboardInteractor.Callback callback;
     private Context context;
 
-    @Override
-    public void setRepositoryEngineSpeech(RepositoryEngineSpeech repository) {
+    public DashboardInteractor(RepositoryEngineSpeech repository, Context context) {
         this.repository = repository;
+        this.context = context;
     }
 
     @Override
-    public void setCallback(Callback callback) {
-        this.callback = callback;
-    }
-
-    @Override
-    public void setIbmWatson(EngineSpeech engineSpeech) {
-        this.callback.onChangeEngine(engineSpeech);
+    public void setIbmWatson(EngineSpeech engineSpeech, DashboardInteractor.Callback callback) {
+        callback.onChangeEngine(engineSpeech);
         this.repository = new IbmWatsonRepositoryEngineSpeech(this.context);
     }
 
     @Override
-    public void setAndroidSpeech(EngineSpeech engineSpeech) {
-        this.callback.onChangeEngine(engineSpeech);
+    public void setAndroidSpeech(EngineSpeech engineSpeech, DashboardInteractor.Callback callback) {
         this.repository = new AndroidSpeechRepositoryEngineSpeech(this.context);
+        callback.onChangeEngine(engineSpeech);
     }
 
     @Override
-    public void setGoogleMachineLearning(EngineSpeech engineSpeech) {
-        this.callback.onChangeEngine(engineSpeech);
+    public void setGoogleMachineLearning(EngineSpeech engineSpeech, DashboardInteractor.Callback callback) {
         this.repository = new GoogleMachineRepositoryEngineSpeech(this.context);
-    }
-
-    @Override
-    public void setContext(Context context) {
-        this.context = context;
+        callback.onChangeEngine(engineSpeech);
     }
 
     @Override
