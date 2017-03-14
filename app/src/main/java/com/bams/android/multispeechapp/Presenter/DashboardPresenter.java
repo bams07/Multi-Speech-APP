@@ -6,6 +6,8 @@ import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Data.DashboardInteractor;
 import com.bams.android.multispeechapp.Data.Database.FirebaseRepository;
 import com.bams.android.multispeechapp.Data.EngineSpeech.AndroidSpeechRepositoryEngineSpeech;
+import com.bams.android.multispeechapp.Data.IProductsInteractor;
+import com.bams.android.multispeechapp.Data.ProductsInteractor;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryDatabase;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Data.IDashboardInteractor;
@@ -13,17 +15,19 @@ import com.bams.android.multispeechapp.Domain.Product;
 import com.bams.android.multispeechapp.ui.dashboard.IDashboardView;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by bams on 3/9/17.
  */
 
-public class DashboardPresenter implements IDashboardPresenter, IDashboardInteractor.Callback {
+public class DashboardPresenter implements IDashboardPresenter, IDashboardInteractor.Callback, IProductsInteractor.Callback {
 
     private IDashboardView view;
     private Context context;
     private Enum selectedEngine = EngineSpeech.ANDROID_SPEECH;
-    private DashboardInteractor interactor;
+    private DashboardInteractor speechInteractor;
+    private ProductsInteractor productsInteractor;
     private AndroidSpeechRepositoryEngineSpeech speechRepository;
     private FirebaseRepository databaseRepository;
 
@@ -32,7 +36,8 @@ public class DashboardPresenter implements IDashboardPresenter, IDashboardIntera
         this.context = context;
         speechRepository = new AndroidSpeechRepositoryEngineSpeech(this.context);
         databaseRepository = new FirebaseRepository();
-        interactor = new DashboardInteractor(speechRepository, this.context);
+        productsInteractor = new ProductsInteractor(databaseRepository);
+        speechInteractor = new DashboardInteractor(speechRepository, this.context);
     }
 
     @Override
@@ -43,28 +48,27 @@ public class DashboardPresenter implements IDashboardPresenter, IDashboardIntera
     @Override
     public void addProduct(String data) {
         Product item = new Product(data, data, data, new Date(), "PENDENT");
-        this.databaseRepository.add(item);
-        this.onAddProduct();
+        productsInteractor.addProduct(item, this);
     }
 
     @Override
     public void onListenToAdd() {
-        interactor.onListenToAdd();
+        speechInteractor.onListenToAdd();
     }
 
     @Override
     public void changeSpeechEngine(EngineSpeech engineSpeech) {
         switch (engineSpeech) {
             case ANDROID_SPEECH:
-                interactor.setAndroidSpeech(engineSpeech, this);
+                speechInteractor.setAndroidSpeech(engineSpeech, this);
                 view.toggleMenuEngineSpeech();
                 break;
             case IBM_WATSON:
-                interactor.setIbmWatson(engineSpeech, this);
+                speechInteractor.setIbmWatson(engineSpeech, this);
                 view.toggleMenuEngineSpeech();
                 break;
             case GOOGLE_MACHINE_LEARNING:
-                interactor.setGoogleMachineLearning(engineSpeech, this);
+                speechInteractor.setGoogleMachineLearning(engineSpeech, this);
                 view.toggleMenuEngineSpeech();
                 break;
         }
@@ -78,7 +82,12 @@ public class DashboardPresenter implements IDashboardPresenter, IDashboardIntera
     }
 
     @Override
-    public void onAddProduct() {
+    public void onAddedProduct() {
         view.showProductAdded();
+    }
+
+    @Override
+    public void onGetItems(List<Product> items) {
+
     }
 }

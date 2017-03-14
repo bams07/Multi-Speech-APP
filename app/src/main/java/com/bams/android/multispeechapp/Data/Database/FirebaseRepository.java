@@ -1,7 +1,6 @@
 package com.bams.android.multispeechapp.Data.Database;
 
-import com.bams.android.multispeechapp.Constants.ProductStatus;
-import com.bams.android.multispeechapp.Data.IShoppingListInteractor;
+import com.bams.android.multispeechapp.Data.IProductsInteractor;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryDatabase;
 import com.bams.android.multispeechapp.Domain.Product;
 import com.google.firebase.database.DataSnapshot;
@@ -11,7 +10,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,7 +35,7 @@ public class FirebaseRepository implements RepositoryDatabase {
     }
 
     @Override
-    public void get(final IShoppingListInteractor.Callback callback) {
+    public void get(final IProductsInteractor.Callback callback) {
         items = new ArrayList<Product>();
         mReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

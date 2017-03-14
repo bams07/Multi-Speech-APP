@@ -2,11 +2,13 @@ package com.bams.android.multispeechapp.Presenter;
 
 import android.content.Context;
 
-import com.bams.android.multispeechapp.Data.IShoppingListInteractor;
+import com.bams.android.multispeechapp.Data.Database.FirebaseRepository;
+import com.bams.android.multispeechapp.Data.IProductsInteractor;
+import com.bams.android.multispeechapp.Data.ProductsInteractor;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryDatabase;
 import com.bams.android.multispeechapp.Domain.Product;
-import com.bams.android.multispeechapp.Presenter.IShoppingListPresenter;
 import com.bams.android.multispeechapp.ui.ShoppingList.IShoppingListView;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -14,26 +16,28 @@ import java.util.List;
  * Created by bams on 3/12/17.
  */
 
-public class ShoppingListPresenter implements IShoppingListPresenter, IShoppingListInteractor.Callback {
+public class ShoppingListPresenter implements IShoppingListPresenter, IProductsInteractor.Callback {
 
     private IShoppingListView view;
-    private IShoppingListInteractor interactor;
-    private RepositoryDatabase repository;
+    private ProductsInteractor interactor;
+    private FirebaseRepository repository;
     private Context context;
 
-    public ShoppingListPresenter(Context context, IShoppingListView view, IShoppingListInteractor interactor, RepositoryDatabase repository) {
+    public ShoppingListPresenter(Context context, IShoppingListView view) {
         this.view = view;
-        this.interactor = interactor;
-        this.repository = repository;
         this.context = context;
-        this.interactor.setCallback(this);
-        this.interactor.setRepository(repository);
+        this.repository = new FirebaseRepository();
+        this.interactor = new ProductsInteractor(this.repository);
     }
 
 
     @Override
     public void onResume() {
-        interactor.getProducts();
+        interactor.getProducts(this);
+    }
+
+    @Override
+    public void onAddedProduct() {
 
     }
 

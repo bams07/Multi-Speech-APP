@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
+import com.bams.android.multispeechapp.Domain.Product;
+import com.bams.android.multispeechapp.Presenter.DashboardPresenter;
 
 /**
  * Created by bams on 3/9/17.
@@ -20,8 +22,6 @@ public interface IDashboardInteractor {
 
     interface Callback {
         void onChangeEngine(EngineSpeech engineSpeech);
-
-        void onAddProduct();
 
     }
 

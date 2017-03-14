@@ -12,17 +12,16 @@ import java.util.List;
  * Created by bams on 3/12/17.
  */
 
-public interface IShoppingListInteractor {
-    void getProducts();
+public interface IProductsInteractor {
 
-    void setRepository(RepositoryDatabase repository);
+    void getProducts(Callback callback);
 
-
-    void setCallback(Callback callback);
+    void addProduct(Product item, Callback callback);
 
     interface Callback {
+        void onAddedProduct();
+
         void onGetItems(List<Product> items);
     }
-
 
 }

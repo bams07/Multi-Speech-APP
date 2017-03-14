@@ -8,6 +8,7 @@ import com.bams.android.multispeechapp.Data.EngineSpeech.GoogleMachineRepository
 import com.bams.android.multispeechapp.Data.EngineSpeech.IbmWatsonRepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Data.IDashboardInteractor;
+import com.bams.android.multispeechapp.Domain.Product;
 
 /**
  * Created by bams on 3/9/17.
@@ -45,4 +46,5 @@ public class DashboardInteractor implements IDashboardInteractor {
     public void onListenToAdd() {
         this.repository.startRecognition();
     }
+
 }

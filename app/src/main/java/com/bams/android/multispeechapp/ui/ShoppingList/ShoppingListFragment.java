@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
 import com.bams.android.multispeechapp.Data.Database.FirebaseRepository;
-import com.bams.android.multispeechapp.Data.ShoppingListInteractor;
+import com.bams.android.multispeechapp.Data.ProductsInteractor;
 import com.bams.android.multispeechapp.Domain.Product;
 import com.bams.android.multispeechapp.Presenter.IShoppingListPresenter;
 import com.bams.android.multispeechapp.Presenter.ShoppingListPresenter;
@@ -70,7 +70,7 @@ public class ShoppingListFragment extends Fragment implements IShoppingListView 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        presenter = new ShoppingListPresenter(this.getContext(), this, new ShoppingListInteractor(), new FirebaseRepository());
+        presenter = new ShoppingListPresenter(this.getContext(), this);
 
     }
 
