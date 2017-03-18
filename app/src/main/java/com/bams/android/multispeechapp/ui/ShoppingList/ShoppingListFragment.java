@@ -32,7 +32,7 @@ public class ShoppingListFragment extends Fragment implements IShoppingListView 
 
 
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private LinearLayoutManager mLayoutManager;
     private IShoppingListPresenter presenter;
 
     //    // TODO: Rename parameter arguments, choose names that match
@@ -102,6 +102,8 @@ public class ShoppingListFragment extends Fragment implements IShoppingListView 
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
+        mLayoutManager.setReverseLayout(true);
+        mLayoutManager.setStackFromEnd(true);
         recyclerViewProducts.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)

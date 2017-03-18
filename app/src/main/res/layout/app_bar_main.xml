@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.bams.android.multispeechapp.ui.dashboard.DashboardActivity">
+    tools:context="com.bams.android.multispeechapp.ui.Dashboard.DashboardActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
         app:menu_colorNormal="@color/appGreen"
+        android:padding="10dp"
         app:menu_colorPressed="@color/appGreen"
         app:menu_fab_label="Speech Service"
         app:menu_icon="@android:drawable/ic_menu_manage"

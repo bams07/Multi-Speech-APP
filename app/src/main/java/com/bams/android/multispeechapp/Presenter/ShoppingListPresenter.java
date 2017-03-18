@@ -10,6 +10,7 @@ import com.bams.android.multispeechapp.Domain.Product;
 import com.bams.android.multispeechapp.ui.ShoppingList.IShoppingListView;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,7 +20,7 @@ import java.util.List;
 public class ShoppingListPresenter implements IShoppingListPresenter, IProductsInteractor.Callback {
 
     private IShoppingListView view;
-    private ProductsInteractor interactor;
+    private ProductsInteractor productsInteractor;
     private FirebaseRepository repository;
     private Context context;
 
@@ -27,13 +28,12 @@ public class ShoppingListPresenter implements IShoppingListPresenter, IProductsI
         this.view = view;
         this.context = context;
         this.repository = new FirebaseRepository();
-        this.interactor = new ProductsInteractor(this.repository);
+        this.productsInteractor = new ProductsInteractor(this.repository);
     }
-
 
     @Override
     public void onResume() {
-        interactor.getProducts(this);
+        productsInteractor.getProducts(this);
     }
 
     @Override

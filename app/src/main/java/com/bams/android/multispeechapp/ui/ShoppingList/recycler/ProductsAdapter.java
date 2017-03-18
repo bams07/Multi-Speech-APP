@@ -10,6 +10,7 @@ import com.bams.android.multispeechapp.Domain.Product;
 import com.bams.android.multispeechapp.R;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -39,11 +40,12 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        ft = new SimpleDateFormat("dd/MM/yyyy H:mm:ss");
         Product product = products.get(position);
+        ft = new SimpleDateFormat("dd/MM/yyyy H:mm:ss");
+        Date date = new Date(product.getDateTime());
         holder.productName.setText(product.getName());
         holder.productStatus.setText(product.getStatus());
-        holder.productDate.setText(ft.format(product.getDate()));
+        holder.productDate.setText(ft.format(date));
         holder.itemView.setTag(product);
     }
 

@@ -2,6 +2,7 @@ package com.bams.android.multispeechapp.Data.EngineSpeech;
 
 import android.content.Context;
 
+import com.bams.android.multispeechapp.Data.ISpeechInteractor;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
 
 /**
@@ -17,7 +18,7 @@ public class GoogleMachineRepositoryEngineSpeech implements RepositoryEngineSpee
     }
 
     @Override
-    public void startRecognition() {
+    public void startRecognition(ISpeechInteractor.Callback callback) {
 
     }
 

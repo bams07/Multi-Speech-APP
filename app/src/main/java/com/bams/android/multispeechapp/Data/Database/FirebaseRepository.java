@@ -37,7 +37,7 @@ public class FirebaseRepository implements RepositoryDatabase {
     @Override
     public void get(final IProductsInteractor.Callback callback) {
         items = new ArrayList<Product>();
-        mReference.addListenerForSingleValueEvent(new ValueEventListener() {
+        mReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Set each element as product class

@@ -15,17 +15,17 @@ public class Product {
     public String name;
     public String brand;
     public String quantity;
-    public Date date;
+    public long dateTime;
     public String status;
 
     public Product() {
     }
 
-    public Product(String name, String brand, String quantity, Date date, String status) {
+    public Product(String name, String brand, String quantity, long dateTime, String status) {
         this.name = name;
         this.brand = brand;
         this.quantity = quantity;
-        this.date = date;
+        this.dateTime = dateTime;
         this.status = status;
     }
 
@@ -35,8 +35,8 @@ public class Product {
     }
 
 
-    public void setDate (Date date) {
-        this.date = date;
+    public void setDateTime (long dateTime) {
+        this.dateTime = dateTime;
     }
 
     public void setName(String name) {
@@ -63,8 +63,8 @@ public class Product {
         return quantity;
     }
 
-    public Date getDate(){
-        return this.date;
+    public long getDateTime(){
+        return this.dateTime;
     }
 
     public String getStatus() {

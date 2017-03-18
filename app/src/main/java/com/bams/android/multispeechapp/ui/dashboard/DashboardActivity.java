@@ -1,11 +1,13 @@
-package com.bams.android.multispeechapp.ui.dashboard;
+package com.bams.android.multispeechapp.ui.Dashboard;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.speech.RecognizerIntent;
-import android.support.v4.app.FragmentManager;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,22 +17,28 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bams.android.multispeechapp.Constants.EngineSpeech;
+import com.bams.android.multispeechapp.Constants.Fragment;
 import com.bams.android.multispeechapp.Constants.RequestCodes;
+import com.bams.android.multispeechapp.Constants.SpeechStatus;
 import com.bams.android.multispeechapp.Presenter.DashboardPresenter;
 import com.bams.android.multispeechapp.Presenter.IDashboardPresenter;
 import com.bams.android.multispeechapp.R;
 import com.bams.android.multispeechapp.ui.Reports.ReportsFragment;
 import com.bams.android.multispeechapp.ui.ShoppingList.ShoppingListFragment;
-import com.bams.android.multispeechapp.Constants.EngineSpeech;
-import com.bams.android.multispeechapp.Constants.Fragment;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Optional;
 
 public class DashboardActivity extends AppCompatActivity
         implements IDashboardView, NavigationView.OnNavigationItemSelectedListener {
@@ -49,12 +57,32 @@ public class DashboardActivity extends AppCompatActivity
     NavigationView navView;
     @BindView(R.id.drawer_layout)
     DrawerLayout drawerLayout;
+    @BindView(R.id.content_main)
+    RelativeLayout contentMain;
+    @Nullable
+    @BindView(R.id.textViewProcess)
+    TextView textViewProcess;
+    @Nullable
+    @BindView(R.id.progressListening)
+    ProgressBar progressListening;
+    @Nullable
+    @BindView(R.id.textViewPartialMessage)
+    TextView textViewPartialMessage;
+    @Nullable
+    @BindView(R.id.dialog_cancel)
+    Button dialogCancel;
+    @Nullable
+    @BindView(R.id.btnDialogAddProduct)
+    Button btnDialogAddProduct;
 
 
     private IDashboardPresenter presenter;
     public FragmentManager fragmentManager = getSupportFragmentManager();
     private final int DISELECTED_COLOR = Color.WHITE;
     private final int SELECTED_COLOR = Color.YELLOW;
+    private String productData = null;
+    private Dialog dialogListening;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,11 +103,11 @@ public class DashboardActivity extends AppCompatActivity
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
             ShoppingListFragment fragment = new ShoppingListFragment();
-            transaction.replace(R.id.content_main, fragment);
+            transaction.replace(contentMain.getId(), fragment);
             transaction.commit();
         }
 
-        fragmentManager.beginTransaction().replace(R.id.content_main, new ShoppingListFragment()).commit();
+        fragmentManager.beginTransaction().replace(contentMain.getId(), new ShoppingListFragment()).commit();
 
     }
 
@@ -87,22 +115,6 @@ public class DashboardActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         presenter.onResume();
-    }
-
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            String txt = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS).get(0).toString();
-            switch (requestCode) {
-                case RequestCodes.ANDROID_SPEECH_CODE:
-                        presenter.addProduct(txt);
-                    break;
-            }
-
-        } else {
-            Toast.makeText(getApplicationContext(), "ERROR TO GET DATA", Toast.LENGTH_SHORT).show();
-
-        }
     }
 
     @Override
@@ -130,10 +142,10 @@ public class DashboardActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (item.getItemId()) {
             case R.id.action_add_product:
+                onCreateDialog();
                 presenter.onListenToAdd();
                 break;
         }
-
 
         return super.onOptionsItemSelected(item);
     }
@@ -150,15 +162,13 @@ public class DashboardActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.drawer_btn_reports) {
             changeFragment(Fragment.REPORTS_FRAGMENT);
-
-
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    @OnClick({R.id.menu_btn_watson, R.id.menu_btn_google_machine, R.id.menu_btn_android_speech, R.id.menu_speech_engines})
+    @OnClick({R.id.menu_btn_watson, R.id.menu_btn_google_machine, R.id.menu_btn_android_speech})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.menu_btn_watson:
@@ -169,9 +179,6 @@ public class DashboardActivity extends AppCompatActivity
                 break;
             case R.id.menu_btn_android_speech:
                 presenter.changeSpeechEngine(EngineSpeech.ANDROID_SPEECH);
-                break;
-            case R.id.menu_speech_engines:
-                toggleMenuEngineSpeech();
                 break;
         }
     }
@@ -225,5 +232,57 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     public void showProductAdded() {
         Toast.makeText(this, "NEW PRODUCT ADDED", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void setPartialMessage(final String message) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textViewPartialMessage.setText(message);
+            }
+        });
+    }
+
+    @Override
+    public void setSpeechStatus(SpeechStatus status) {
+        textViewProcess.setText(status.toString());
+    }
+
+    @Override
+    public void setProductToAccept(String data) {
+        productData = data;
+    }
+
+    @Override
+    public void setProgressAsStopped() {
+    }
+
+    @Override
+    public void closeDialogListening() {
+        dialogListening.dismiss();
+    }
+
+    public void onCreateDialog() {
+        dialogListening = new Dialog(this);
+        dialogListening.setContentView(R.layout.fragment_listening);
+        progressListening = ButterKnife.findById(dialogListening, R.id.progressListening);
+        textViewPartialMessage = ButterKnife.findById(dialogListening, R.id.textViewPartialMessage);
+        dialogCancel = ButterKnife.findById(dialogListening, R.id.dialog_cancel);
+        btnDialogAddProduct = ButterKnife.findById(dialogListening, R.id.btnDialogAddProduct);
+        dialogCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeDialogListening();
+            }
+        });
+        btnDialogAddProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                presenter.addProduct(productData);
+            }
+        });
+        textViewProcess = ButterKnife.findById(dialogListening, R.id.textViewProcess);
+        dialogListening.show();
     }
 }

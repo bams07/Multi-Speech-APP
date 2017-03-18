@@ -3,16 +3,15 @@ package com.bams.android.multispeechapp.Presenter;
 import android.content.Context;
 
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
-import com.bams.android.multispeechapp.Data.DashboardInteractor;
+import com.bams.android.multispeechapp.Constants.SpeechStatus;
+import com.bams.android.multispeechapp.Data.SpeechInteractor;
 import com.bams.android.multispeechapp.Data.Database.FirebaseRepository;
 import com.bams.android.multispeechapp.Data.EngineSpeech.AndroidSpeechRepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Data.IProductsInteractor;
 import com.bams.android.multispeechapp.Data.ProductsInteractor;
-import com.bams.android.multispeechapp.Data.Repository.RepositoryDatabase;
-import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
-import com.bams.android.multispeechapp.Data.IDashboardInteractor;
+import com.bams.android.multispeechapp.Data.ISpeechInteractor;
 import com.bams.android.multispeechapp.Domain.Product;
-import com.bams.android.multispeechapp.ui.dashboard.IDashboardView;
+import com.bams.android.multispeechapp.ui.Dashboard.IDashboardView;
 
 import java.util.Date;
 import java.util.List;
@@ -21,12 +20,12 @@ import java.util.List;
  * Created by bams on 3/9/17.
  */
 
-public class DashboardPresenter implements IDashboardPresenter, IDashboardInteractor.Callback, IProductsInteractor.Callback {
+public class DashboardPresenter implements IDashboardPresenter, ISpeechInteractor.Callback, IProductsInteractor.Callback {
 
     private IDashboardView view;
     private Context context;
     private Enum selectedEngine = EngineSpeech.ANDROID_SPEECH;
-    private DashboardInteractor speechInteractor;
+    private SpeechInteractor speechInteractor;
     private ProductsInteractor productsInteractor;
     private AndroidSpeechRepositoryEngineSpeech speechRepository;
     private FirebaseRepository databaseRepository;
@@ -37,7 +36,7 @@ public class DashboardPresenter implements IDashboardPresenter, IDashboardIntera
         speechRepository = new AndroidSpeechRepositoryEngineSpeech(this.context);
         databaseRepository = new FirebaseRepository();
         productsInteractor = new ProductsInteractor(databaseRepository);
-        speechInteractor = new DashboardInteractor(speechRepository, this.context);
+        speechInteractor = new SpeechInteractor(speechRepository, this.context);
     }
 
     @Override
@@ -47,13 +46,14 @@ public class DashboardPresenter implements IDashboardPresenter, IDashboardIntera
 
     @Override
     public void addProduct(String data) {
-        Product item = new Product(data, data, data, new Date(), "PENDENT");
+        Product item = new Product(data, data, data, new Date().getTime(), "PENDENT");
         productsInteractor.addProduct(item, this);
     }
 
     @Override
     public void onListenToAdd() {
-        speechInteractor.onListenToAdd();
+        view.setSpeechStatus(SpeechStatus.LISTENING);
+        speechInteractor.onListenToAdd(this);
     }
 
     @Override
@@ -82,8 +82,30 @@ public class DashboardPresenter implements IDashboardPresenter, IDashboardIntera
     }
 
     @Override
+    public void onResponseListen(String data) {
+        view.setProductToAccept(data);
+//        addProduct(data);
+    }
+
+    @Override
+    public void onErrorListen(String error) {
+
+    }
+
+    @Override
+    public void onPartialResults(String message) {
+        view.setPartialMessage(message);
+    }
+
+    @Override
+    public void onEndSpeech() {
+        view.setSpeechStatus(SpeechStatus.STOPPED);
+    }
+
+    @Override
     public void onAddedProduct() {
         view.showProductAdded();
+        view.closeDialogListening();
     }
 
     @Override

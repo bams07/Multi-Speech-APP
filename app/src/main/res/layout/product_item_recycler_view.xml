@@ -23,7 +23,6 @@
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#f4f3f3"
             android:columnCount="2"
             android:padding="10dp"
             android:rowCount="2">
