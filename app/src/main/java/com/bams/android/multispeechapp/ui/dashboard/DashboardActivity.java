@@ -1,10 +1,9 @@
 package com.bams.android.multispeechapp.ui.Dashboard;
 
 import android.app.Dialog;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.speech.RecognizerIntent;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Constants.Fragment;
-import com.bams.android.multispeechapp.Constants.RequestCodes;
 import com.bams.android.multispeechapp.Constants.SpeechStatus;
 import com.bams.android.multispeechapp.Presenter.DashboardPresenter;
 import com.bams.android.multispeechapp.Presenter.IDashboardPresenter;
@@ -38,7 +36,6 @@ import com.github.clans.fab.FloatingActionMenu;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Optional;
 
 public class DashboardActivity extends AppCompatActivity
         implements IDashboardView, NavigationView.OnNavigationItemSelectedListener {
@@ -83,7 +80,6 @@ public class DashboardActivity extends AppCompatActivity
     private String productData = null;
     private Dialog dialogListening;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,9 +92,19 @@ public class DashboardActivity extends AppCompatActivity
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
+        dialogListening = new Dialog(this);
+
+        dialogListening.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                presenter.onStopListen();
+            }
+        });
+
         navView.setNavigationItemSelectedListener(this);
 
         presenter = new DashboardPresenter(this, this);
+
 
         if (savedInstanceState == null) {
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -142,7 +148,7 @@ public class DashboardActivity extends AppCompatActivity
         int id = item.getItemId();
         switch (item.getItemId()) {
             case R.id.action_add_product:
-                onCreateDialog();
+                openListeningDialog();
                 presenter.onListenToAdd();
                 break;
         }
@@ -235,7 +241,7 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     @Override
-    public void setPartialMessage(final String message) {
+    public void setOnPartialResults(final String message) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -245,8 +251,18 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     @Override
-    public void setSpeechStatus(SpeechStatus status) {
-        textViewProcess.setText(status.toString());
+    public void setSpeechStatus(final SpeechStatus status) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textViewProcess.setText(status.toString());
+            }
+        });
+    }
+
+    @Override
+    public void setOnErrorListen(String error) {
+
     }
 
     @Override
@@ -263,8 +279,7 @@ public class DashboardActivity extends AppCompatActivity
         dialogListening.dismiss();
     }
 
-    public void onCreateDialog() {
-        dialogListening = new Dialog(this);
+    public void openListeningDialog() {
         dialogListening.setContentView(R.layout.fragment_listening);
         progressListening = ButterKnife.findById(dialogListening, R.id.progressListening);
         textViewPartialMessage = ButterKnife.findById(dialogListening, R.id.textViewPartialMessage);
@@ -274,12 +289,14 @@ public class DashboardActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 closeDialogListening();
+                presenter.onStopListen();
             }
         });
         btnDialogAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 presenter.addProduct(productData);
+                presenter.onStopListen();
             }
         });
         textViewProcess = ButterKnife.findById(dialogListening, R.id.textViewProcess);

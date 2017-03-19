@@ -8,10 +8,10 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:animateLayoutChanges="true"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Light"
     android:weightSum="1">
+
 
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
@@ -21,20 +21,17 @@
         card_view:cardCornerRadius="2dp"
         card_view:contentPadding="10dp">
 
-        <GridLayout
+        <RelativeLayout
+            android:id="@+id/headerProduct"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#f4f3f3"
-            android:columnCount="2"
-            android:padding="10dp"
-            android:rowCount="2">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/product_date"
-                android:layout_column="0"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:fontFamily="Arial"
                 android:text="22/07/2017 20:06:10"
-                android:layout_gravity="start"
                 android:textColor="#000"
                 android:textSize="15dp"
                 android:textStyle="normal|bold"
@@ -42,9 +39,11 @@
 
             <TextView
                 android:id="@+id/product_status"
-                android:layout_column="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/product_date"
                 android:fontFamily="Arial"
-                android:layout_gravity="end"
+                android:gravity="right"
                 android:text="PENDENT"
                 android:textColor="#fc0000"
                 android:textSize="15dp"
@@ -52,15 +51,20 @@
 
             <TextView
                 android:id="@+id/product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/product_date"
                 android:layout_column="0"
-                android:layout_columnWeight="0"
+                android:layout_columnWeight="2"
                 android:fontFamily="Arial"
                 android:text="1x Caja de Leche Dos Pinos"
                 android:textColor="#f18706"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:textSize="20dp" />
 
+        </RelativeLayout>
 
-        </GridLayout>
 
     </android.support.v7.widget.CardView>
 </LinearLayout>

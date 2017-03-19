@@ -33,7 +33,7 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
     public DashboardPresenter(Context context, IDashboardView view) {
         this.view = view;
         this.context = context;
-        speechRepository = new AndroidSpeechRepositoryEngineSpeech(this.context);
+        speechRepository = new AndroidSpeechRepositoryEngineSpeech(this.context, this);
         databaseRepository = new FirebaseRepository();
         productsInteractor = new ProductsInteractor(databaseRepository);
         speechInteractor = new SpeechInteractor(speechRepository, this.context);
@@ -52,8 +52,7 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
 
     @Override
     public void onListenToAdd() {
-        view.setSpeechStatus(SpeechStatus.LISTENING);
-        speechInteractor.onListenToAdd(this);
+        speechInteractor.onListenToAdd();
     }
 
     @Override
@@ -75,6 +74,11 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
     }
 
     @Override
+    public void onStopListen() {
+        speechInteractor.onStopListen();
+    }
+
+    @Override
     public void onChangeEngine(EngineSpeech engineSpeech) {
         view.setMenuDisSelectedEngine((EngineSpeech) selectedEngine);
         view.setMenuSelectedEngine(engineSpeech);
@@ -88,13 +92,18 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
     }
 
     @Override
-    public void onErrorListen(String error) {
+    public void onBeginningOfSpeech() {
+        view.setSpeechStatus(SpeechStatus.LISTENING);
+    }
 
+    @Override
+    public void onErrorListen(String error) {
+        view.setOnErrorListen(error);
     }
 
     @Override
     public void onPartialResults(String message) {
-        view.setPartialMessage(message);
+        view.setOnPartialResults(message);
     }
 
     @Override

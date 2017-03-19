@@ -27,60 +27,67 @@ import java.util.ArrayList;
 public class AndroidSpeechRepositoryEngineSpeech extends Activity implements RepositoryEngineSpeech {
 
     private Context context;
+    private ISpeechInteractor.Callback callback;
     private SpeechRecognizer mSpeechRecognizer;
     private Intent mSpeechRecognizerIntent;
     private boolean mIsListening;
 
-    public AndroidSpeechRepositoryEngineSpeech(Context context) {
+    public AndroidSpeechRepositoryEngineSpeech(Context context, final ISpeechInteractor.Callback callback) {
         this.context = context;
+        this.callback = callback;
+        mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this.context);
+        mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+                RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
+                this.context.getPackageName());
+
+        mSpeechRecognizer.setRecognitionListener(new RecognitionListenerAdapter() {
+            @Override
+            public void onEndOfSpeech() {
+                super.onEndOfSpeech();
+                callback.onEndSpeech();
+            }
+
+            @Override
+            public void onReadyForSpeech(Bundle params) {
+                super.onReadyForSpeech(params);
+                callback.onBeginningOfSpeech();
+            }
+
+            @Override
+            public void onError(int error) {
+                super.onError(error);
+                callback.onErrorListen(Integer.toString(error));
+            }
+
+            @Override
+            public void onResults(Bundle results) {
+                super.onResults(results);
+                ArrayList<String> matches = results
+                        .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                callback.onResponseListen(matches.get(0));
+            }
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {
+                super.onPartialResults(partialResults);
+                ArrayList<String> matches = partialResults
+                        .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                callback.onPartialResults(matches.get(0));
+            }
+        });
     }
 
     @Override
-    public void startRecognition(final ISpeechInteractor.Callback callback) {
+    public void startRecognition() {
         if (isConnected()) {
-            mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this.context);
-            mSpeechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
-                    RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
-                    this.context.getPackageName());
-
-            mSpeechRecognizer.setRecognitionListener(new RecognitionListenerAdapter() {
-                @Override
-                public void onEndOfSpeech() {
-                    super.onEndOfSpeech();
-                    callback.onEndSpeech();
-                }
-
-                @Override
-                public void onError(int error) {
-                    super.onError(error);
-                    callback.onErrorListen("ERROR");
-                }
-
-                @Override
-                public void onResults(Bundle results) {
-                    super.onResults(results);
-                    ArrayList<String> matches = results
-                            .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                    callback.onResponseListen(matches.get(0));
-                }
-
-                @Override
-                public void onPartialResults(Bundle partialResults) {
-                    super.onPartialResults(partialResults);
-                    ArrayList<String> matches = partialResults
-                            .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                    callback.onPartialResults(matches.get(0));
-                }
-            });
-
-
             if (!mIsListening) {
                 mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+            } else {
+                mSpeechRecognizer.cancel();
             }
-
         } else {
             Toast.makeText(this.context, "Please Connect to Internet", Toast.LENGTH_SHORT).show();
         }
@@ -88,13 +95,8 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements Rep
     }
 
     @Override
-    public void onError(String error) {
-
-    }
-
-    @Override
-    public void onResponse(String data) {
-
+    public void onStopListen() {
+        mSpeechRecognizer.cancel();
     }
 
     /**

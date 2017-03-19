@@ -12,23 +12,20 @@ import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
 public class GoogleMachineRepositoryEngineSpeech implements RepositoryEngineSpeech {
 
     private Context context;
+    private ISpeechInteractor.Callback callback;
 
-    public GoogleMachineRepositoryEngineSpeech(Context context) {
+    public GoogleMachineRepositoryEngineSpeech(Context context, ISpeechInteractor.Callback callback) {
         this.context = context;
+        this.callback = callback;
     }
 
     @Override
-    public void startRecognition(ISpeechInteractor.Callback callback) {
-
-    }
-
-    @Override
-    public void onError(String error) {
+    public void startRecognition() {
 
     }
 
     @Override
-    public void onResponse(String data) {
+    public void onStopListen() {
 
     }
 

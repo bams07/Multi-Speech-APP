@@ -13,12 +13,16 @@ public interface ISpeechInteractor {
 
     void setGoogleMachineLearning(EngineSpeech engineSpeech, SpeechInteractor.Callback callback);
 
-    void onListenToAdd(Callback callback);
+    void onListenToAdd();
+
+    void onStopListen();
 
     interface Callback {
         void onChangeEngine(EngineSpeech engineSpeech);
 
         void onResponseListen(String data);
+
+        void onBeginningOfSpeech();
 
         void onErrorListen(String error);
 

@@ -15,4 +15,6 @@ public interface IDashboardPresenter {
     void onListenToAdd();
 
     void changeSpeechEngine(EngineSpeech engineSpeech);
+
+    void onStopListen();
 }

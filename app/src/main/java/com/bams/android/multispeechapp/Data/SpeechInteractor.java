@@ -25,24 +25,29 @@ public class SpeechInteractor implements ISpeechInteractor {
     @Override
     public void setIbmWatson(EngineSpeech engineSpeech, SpeechInteractor.Callback callback) {
         callback.onChangeEngine(engineSpeech);
-        this.repository = new IbmWatsonRepositoryEngineSpeech(this.context);
+        this.repository = new IbmWatsonRepositoryEngineSpeech(this.context, callback);
     }
 
     @Override
     public void setAndroidSpeech(EngineSpeech engineSpeech, SpeechInteractor.Callback callback) {
-        this.repository = new AndroidSpeechRepositoryEngineSpeech(this.context);
         callback.onChangeEngine(engineSpeech);
+        this.repository = new AndroidSpeechRepositoryEngineSpeech(this.context, callback);
     }
 
     @Override
     public void setGoogleMachineLearning(EngineSpeech engineSpeech, SpeechInteractor.Callback callback) {
-        this.repository = new GoogleMachineRepositoryEngineSpeech(this.context);
         callback.onChangeEngine(engineSpeech);
+        this.repository = new GoogleMachineRepositoryEngineSpeech(this.context, callback);
     }
 
     @Override
-    public void onListenToAdd(Callback callback) {
-        this.repository.startRecognition(callback);
+    public void onListenToAdd() {
+        this.repository.startRecognition();
+    }
+
+    @Override
+    public void onStopListen() {
+        this.repository.onStopListen();
     }
 
 }

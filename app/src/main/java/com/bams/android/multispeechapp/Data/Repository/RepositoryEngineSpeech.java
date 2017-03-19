@@ -8,11 +8,9 @@ import com.bams.android.multispeechapp.Data.ISpeechInteractor;
 
 public interface RepositoryEngineSpeech {
 
-    void startRecognition(ISpeechInteractor.Callback callback);
+    void startRecognition();
 
-    void onError(String error);
-
-    void onResponse(String data);
+    void onStopListen();
 
     boolean isConnected();
 

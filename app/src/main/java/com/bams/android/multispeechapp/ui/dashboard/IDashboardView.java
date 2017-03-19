@@ -17,9 +17,11 @@ public interface IDashboardView {
 
     void showProductAdded();
 
-    void setPartialMessage(String message);
+    void setOnPartialResults(String message);
 
     void setSpeechStatus(SpeechStatus status);
+
+    void setOnErrorListen(String error);
 
     void setProductToAccept(String data);
 
