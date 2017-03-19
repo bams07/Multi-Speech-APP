@@ -5,6 +5,7 @@ import android.content.Context;
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Data.EngineSpeech.AndroidSpeechRepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Data.EngineSpeech.GoogleMachineRepositoryEngineSpeech;
+import com.bams.android.multispeechapp.Data.EngineSpeech.HoundifyRepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Data.EngineSpeech.IbmWatsonRepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
 
@@ -38,6 +39,12 @@ public class SpeechInteractor implements ISpeechInteractor {
     public void setGoogleMachineLearning(EngineSpeech engineSpeech, SpeechInteractor.Callback callback) {
         callback.onChangeEngine(engineSpeech);
         this.repository = new GoogleMachineRepositoryEngineSpeech(this.context, callback);
+    }
+
+    @Override
+    public void setHoundify(EngineSpeech engineSpeech, SpeechInteractor.Callback callback) {
+        callback.onChangeEngine(engineSpeech);
+        this.repository = new HoundifyRepositoryEngineSpeech(this.context, callback);
     }
 
     @Override

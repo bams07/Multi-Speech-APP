@@ -13,6 +13,8 @@ public interface ISpeechInteractor {
 
     void setGoogleMachineLearning(EngineSpeech engineSpeech, SpeechInteractor.Callback callback);
 
+    void setHoundify(EngineSpeech engineSpeech, SpeechInteractor.Callback callback);
+
     void onListenToAdd();
 
     void onStopListen();
@@ -31,7 +33,6 @@ public interface ISpeechInteractor {
         void onEndSpeech();
 
     }
-
 
 
 }

@@ -70,6 +70,10 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
                 speechInteractor.setGoogleMachineLearning(engineSpeech, this);
                 view.toggleMenuEngineSpeech();
                 break;
+            case HOUNDIFY:
+                speechInteractor.setHoundify(engineSpeech, this);
+                view.toggleMenuEngineSpeech();
+                break;
         }
     }
 

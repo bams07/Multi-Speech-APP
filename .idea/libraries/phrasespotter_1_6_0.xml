@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="phrasespotter-1.6.0">
+    <CLASSES>
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/hound.android/phrasespotter/1.6.0/res" />
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/hound.android/phrasespotter/1.6.0/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/hound.android/phrasespotter/1.6.0/96f298bf0292967d50b4adce0f6db81db878374f/phrasespotter-1.6.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

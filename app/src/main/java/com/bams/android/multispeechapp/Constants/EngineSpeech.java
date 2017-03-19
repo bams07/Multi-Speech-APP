@@ -7,7 +7,9 @@ package com.bams.android.multispeechapp.Constants;
 public enum EngineSpeech {
     IBM_WATSON,
     ANDROID_SPEECH,
+    HOUNDIFY,
     GOOGLE_MACHINE_LEARNING;
+
 
     public String getUsername() {
         switch (this) {
@@ -31,6 +33,24 @@ public enum EngineSpeech {
         switch (this) {
             case IBM_WATSON:
                 return "https://stream.watsonplatform.net/speech-to-text/api";
+            default:
+                throw new AssertionError("Unknown operations " + this);
+        }
+    }
+
+    public String getClientID() {
+        switch (this) {
+            case HOUNDIFY:
+                return "_98dPIown1cCNi3VNxJhJg==";
+            default:
+                throw new AssertionError("Unknown operations " + this);
+        }
+    }
+
+    public String getClientKey() {
+        switch (this) {
+            case HOUNDIFY:
+                return "LUbeqnfsDQL1XizsL1WegDcqHDJxCtSs57sCOPQpWwd7zJijjj2sjyGEUNCdlrPgt_hl56GtYvzSP5fqxyfK4g==";
             default:
                 throw new AssertionError("Unknown operations " + this);
         }

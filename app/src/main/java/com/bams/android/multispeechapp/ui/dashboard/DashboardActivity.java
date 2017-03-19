@@ -71,6 +71,8 @@ public class DashboardActivity extends AppCompatActivity
     @Nullable
     @BindView(R.id.btnDialogAddProduct)
     Button btnDialogAddProduct;
+    @BindView(R.id.menu_btn_houndify)
+    FloatingActionButton menuBtnHoundify;
 
 
     private IDashboardPresenter presenter;
@@ -174,7 +176,7 @@ public class DashboardActivity extends AppCompatActivity
         return true;
     }
 
-    @OnClick({R.id.menu_btn_watson, R.id.menu_btn_google_machine, R.id.menu_btn_android_speech})
+    @OnClick({R.id.menu_btn_watson, R.id.menu_btn_google_machine, R.id.menu_btn_android_speech, R.id.menu_btn_houndify})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.menu_btn_watson:
@@ -185,6 +187,9 @@ public class DashboardActivity extends AppCompatActivity
                 break;
             case R.id.menu_btn_android_speech:
                 presenter.changeSpeechEngine(EngineSpeech.ANDROID_SPEECH);
+                break;
+            case R.id.menu_btn_houndify:
+                presenter.changeSpeechEngine(EngineSpeech.HOUNDIFY);
                 break;
         }
     }
@@ -217,6 +222,9 @@ public class DashboardActivity extends AppCompatActivity
             case GOOGLE_MACHINE_LEARNING:
                 menuBtnGoogleMachine.setColorNormal(SELECTED_COLOR);
                 break;
+            case HOUNDIFY:
+                menuBtnHoundify.setColorNormal(SELECTED_COLOR);
+                break;
         }
     }
 
@@ -231,6 +239,9 @@ public class DashboardActivity extends AppCompatActivity
                 break;
             case GOOGLE_MACHINE_LEARNING:
                 menuBtnGoogleMachine.setColorNormal(DISELECTED_COLOR);
+                break;
+            case HOUNDIFY:
+                menuBtnHoundify.setColorNormal(DISELECTED_COLOR);
                 break;
         }
     }
