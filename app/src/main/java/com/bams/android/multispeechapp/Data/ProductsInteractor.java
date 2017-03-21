@@ -2,6 +2,7 @@ package com.bams.android.multispeechapp.Data;
 
 import android.telecom.Call;
 
+import com.bams.android.multispeechapp.Constants.ProductStatus;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryDatabase;
 import com.bams.android.multispeechapp.Domain.Product;
 
@@ -21,14 +22,13 @@ public class ProductsInteractor implements IProductsInteractor {
     }
 
     @Override
-    public void getProducts(Callback callback) {
-        this.repository.get(callback);
+    public void getProducts() {
+        this.repository.builder().getByStatus(ProductStatus.PENDENT).getSync();
     }
 
     @Override
-    public void addProduct(Product item, Callback callback) {
+    public void addProduct(Product item) {
         this.repository.add(item);
-        callback.onAddedProduct();
     }
 
 }

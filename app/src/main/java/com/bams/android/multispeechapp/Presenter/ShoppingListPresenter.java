@@ -27,13 +27,13 @@ public class ShoppingListPresenter implements IShoppingListPresenter, IProductsI
     public ShoppingListPresenter(Context context, IShoppingListView view) {
         this.view = view;
         this.context = context;
-        this.repository = new FirebaseRepository();
+        this.repository = new FirebaseRepository(this);
         this.productsInteractor = new ProductsInteractor(this.repository);
     }
 
     @Override
     public void onResume() {
-        productsInteractor.getProducts(this);
+        productsInteractor.getProducts();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.bams.android.multispeechapp.Presenter;
 import android.content.Context;
 
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
+import com.bams.android.multispeechapp.Constants.ProductStatus;
 import com.bams.android.multispeechapp.Constants.SpeechStatus;
 import com.bams.android.multispeechapp.Data.SpeechInteractor;
 import com.bams.android.multispeechapp.Data.Database.FirebaseRepository;
@@ -34,7 +35,7 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
         this.view = view;
         this.context = context;
         speechRepository = new AndroidSpeechRepositoryEngineSpeech(this.context, this);
-        databaseRepository = new FirebaseRepository();
+        databaseRepository = new FirebaseRepository(this);
         productsInteractor = new ProductsInteractor(databaseRepository);
         speechInteractor = new SpeechInteractor(speechRepository, this.context);
     }
@@ -46,8 +47,8 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
 
     @Override
     public void addProduct(String data) {
-        Product item = new Product(data, data, data, new Date().getTime(), "PENDENT");
-        productsInteractor.addProduct(item, this);
+        Product item = new Product(data, "", "", new Date().getTime(), ProductStatus.PENDENT.toString());
+        productsInteractor.addProduct(item);
     }
 
     @Override
@@ -92,7 +93,6 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
     @Override
     public void onResponseListen(String data) {
         view.setProductToAccept(data);
-//        addProduct(data);
     }
 
     @Override
