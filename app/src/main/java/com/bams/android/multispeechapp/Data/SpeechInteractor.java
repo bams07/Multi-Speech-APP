@@ -57,4 +57,19 @@ public class SpeechInteractor implements ISpeechInteractor {
         this.repository.onStopListen();
     }
 
+    @Override
+    public void onStopTextToSpeech() {
+        this.repository.onStopTextToSpeech();
+    }
+
+    @Override
+    public boolean isSpeaking() {
+        return this.repository.isSpeaking();
+    }
+
+    @Override
+    public void speechText(String toSpeak) {
+        this.repository.startTextToSpeech(toSpeak);
+    }
+
 }

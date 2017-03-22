@@ -2,6 +2,7 @@ package com.bams.android.multispeechapp.ui.ShoppingList;
 
 import com.bams.android.multispeechapp.Domain.Product;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,5 +11,5 @@ import java.util.List;
 
 public interface IShoppingListView {
 
-    void setItems(List<Product> items);
+    void setItems(ArrayList<Product> items);
 }

@@ -19,6 +19,12 @@ public interface ISpeechInteractor {
 
     void onStopListen();
 
+    void onStopTextToSpeech();
+
+    boolean isSpeaking();
+
+    void speechText(String toSpeak);
+
     interface Callback {
         void onChangeEngine(EngineSpeech engineSpeech);
 

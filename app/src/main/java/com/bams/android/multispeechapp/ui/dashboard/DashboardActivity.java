@@ -3,6 +3,8 @@ package com.bams.android.multispeechapp.ui.Dashboard;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
@@ -12,6 +14,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +28,7 @@ import android.widget.Toast;
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Constants.Fragment;
 import com.bams.android.multispeechapp.Constants.SpeechStatus;
+import com.bams.android.multispeechapp.Domain.Product;
 import com.bams.android.multispeechapp.Presenter.DashboardPresenter;
 import com.bams.android.multispeechapp.Presenter.IDashboardPresenter;
 import com.bams.android.multispeechapp.R;
@@ -32,6 +36,11 @@ import com.bams.android.multispeechapp.ui.Reports.ReportsFragment;
 import com.bams.android.multispeechapp.ui.ShoppingList.ShoppingListFragment;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -107,15 +116,7 @@ public class DashboardActivity extends AppCompatActivity
 
         presenter = new DashboardPresenter(this, this);
 
-
-        if (savedInstanceState == null) {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            ShoppingListFragment fragment = new ShoppingListFragment();
-            transaction.replace(contentMain.getId(), fragment);
-            transaction.commit();
-        }
-
-        fragmentManager.beginTransaction().replace(contentMain.getId(), new ShoppingListFragment()).commit();
+        changeFragment(Fragment.SHOPPING_LIST_FRAGMENT);
 
     }
 
@@ -148,11 +149,24 @@ public class DashboardActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        switch (item.getItemId()) {
+        switch (id) {
             case R.id.action_add_product:
                 openListeningDialog();
                 presenter.onListenToAdd();
-                break;
+                return true;
+            case R.id.action_listen_list_products:
+                if (!presenter.isSpeaking()) {
+
+                    setMenuItemColor(R.color.appYellow, item);
+                    listenProducts(item);
+
+                } else {
+
+                    setMenuItemColor(R.color.black, item);
+                    presenter.onStopTextToSpeech();
+                }
+
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -176,6 +190,31 @@ public class DashboardActivity extends AppCompatActivity
         return true;
     }
 
+    void listenProducts(MenuItem item) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ShoppingListFragment sListFragment = (ShoppingListFragment)
+                            getSupportFragmentManager().findFragmentByTag("SHOPPING_LIST");
+
+                    ArrayList<Product> items = new ArrayList<Product>();
+
+                    if (sListFragment != null) {
+
+                        items = sListFragment.getListProducts();
+                        for (Product item : items) {
+                            presenter.speechProduct(item.name);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
+
     @OnClick({R.id.menu_btn_watson, R.id.menu_btn_google_machine, R.id.menu_btn_android_speech, R.id.menu_btn_houndify})
     public void onClick(View view) {
         switch (view.getId()) {
@@ -197,10 +236,10 @@ public class DashboardActivity extends AppCompatActivity
     public void changeFragment(Fragment fragment) {
         switch (fragment) {
             case SHOPPING_LIST_FRAGMENT:
-                fragmentManager.beginTransaction().replace(R.id.content_main, new ShoppingListFragment()).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_main, new ShoppingListFragment(), "SHOPPING_LIST").commit();
                 break;
             case REPORTS_FRAGMENT:
-                fragmentManager.beginTransaction().replace(R.id.content_main, new ReportsFragment()).commit();
+                fragmentManager.beginTransaction().replace(R.id.content_main, new ReportsFragment(), "REPORTS").commit();
                 break;
         }
     }
@@ -288,6 +327,15 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     public void closeDialogListening() {
         dialogListening.dismiss();
+    }
+
+    @Override
+    public void setMenuItemColor(int color, MenuItem item) {
+        Drawable drawable = item.getIcon();
+        if (drawable != null) {
+            drawable.mutate();
+            drawable.setColorFilter(getResources().getColor(color), PorterDuff.Mode.SRC_ATOP);
+        }
     }
 
     public void openListeningDialog() {

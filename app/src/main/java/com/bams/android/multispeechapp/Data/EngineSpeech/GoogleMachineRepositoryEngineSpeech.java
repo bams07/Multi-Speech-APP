@@ -25,8 +25,23 @@ public class GoogleMachineRepositoryEngineSpeech implements RepositoryEngineSpee
     }
 
     @Override
+    public void startTextToSpeech(String toSpeak) {
+
+    }
+
+    @Override
     public void onStopListen() {
 
+    }
+
+    @Override
+    public void onStopTextToSpeech() {
+
+    }
+
+    @Override
+    public boolean isSpeaking() {
+        return false;
     }
 
     @Override

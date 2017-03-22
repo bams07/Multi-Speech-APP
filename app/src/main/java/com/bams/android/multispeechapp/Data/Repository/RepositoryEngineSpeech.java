@@ -10,7 +10,13 @@ public interface RepositoryEngineSpeech {
 
     void startRecognition();
 
+    void startTextToSpeech(String toSpeak);
+
     void onStopListen();
+
+    void onStopTextToSpeech();
+
+    boolean isSpeaking();
 
     boolean isConnected();
 

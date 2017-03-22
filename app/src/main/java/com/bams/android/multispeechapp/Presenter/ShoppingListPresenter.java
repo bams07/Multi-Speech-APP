@@ -10,6 +10,7 @@ import com.bams.android.multispeechapp.Domain.Product;
 import com.bams.android.multispeechapp.ui.ShoppingList.IShoppingListView;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +43,7 @@ public class ShoppingListPresenter implements IShoppingListPresenter, IProductsI
     }
 
     @Override
-    public void onGetItems(List<Product> items) {
+    public void onGetItems(ArrayList<Product> items) {
         view.setItems(items);
     }
 }

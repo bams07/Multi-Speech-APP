@@ -8,6 +8,7 @@ import com.bams.android.multispeechapp.Data.Repository.RepositoryDatabase;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Domain.Product;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface IProductsInteractor {
     interface Callback {
         void onAddedProduct();
 
-        void onGetItems(List<Product> items);
+        void onGetItems(ArrayList<Product> items);
     }
 
 }

@@ -14,6 +14,7 @@ import com.bams.android.multispeechapp.Data.ISpeechInteractor;
 import com.bams.android.multispeechapp.Domain.Product;
 import com.bams.android.multispeechapp.ui.Dashboard.IDashboardView;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,16 +29,12 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
     private Enum selectedEngine = EngineSpeech.ANDROID_SPEECH;
     private SpeechInteractor speechInteractor;
     private ProductsInteractor productsInteractor;
-    private AndroidSpeechRepositoryEngineSpeech speechRepository;
-    private FirebaseRepository databaseRepository;
 
     public DashboardPresenter(Context context, IDashboardView view) {
         this.view = view;
         this.context = context;
-        speechRepository = new AndroidSpeechRepositoryEngineSpeech(this.context, this);
-        databaseRepository = new FirebaseRepository(this);
-        productsInteractor = new ProductsInteractor(databaseRepository);
-        speechInteractor = new SpeechInteractor(speechRepository, this.context);
+        productsInteractor = new ProductsInteractor(new FirebaseRepository(this));
+        speechInteractor = new SpeechInteractor(new AndroidSpeechRepositoryEngineSpeech(this.context, this), this.context);
     }
 
     @Override
@@ -49,6 +46,11 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
     public void addProduct(String data) {
         Product item = new Product(data, "", "", new Date().getTime(), ProductStatus.PENDENT.toString());
         productsInteractor.addProduct(item);
+    }
+
+    @Override
+    public void speechProduct(String toSpeak) {
+        this.speechInteractor.speechText(toSpeak);
     }
 
     @Override
@@ -81,6 +83,16 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
     @Override
     public void onStopListen() {
         speechInteractor.onStopListen();
+    }
+
+    @Override
+    public void onStopTextToSpeech() {
+        speechInteractor.onStopTextToSpeech();
+    }
+
+    @Override
+    public boolean isSpeaking() {
+        return speechInteractor.isSpeaking();
     }
 
     @Override
@@ -122,7 +134,7 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
     }
 
     @Override
-    public void onGetItems(List<Product> items) {
+    public void onGetItems(ArrayList<Product> items) {
 
     }
 }

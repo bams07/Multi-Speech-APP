@@ -1,5 +1,8 @@
 package com.bams.android.multispeechapp.ui.Dashboard;
 
+import android.graphics.Color;
+import android.view.MenuItem;
+
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Constants.SpeechStatus;
 
@@ -28,5 +31,7 @@ public interface IDashboardView {
     void setProgressAsStopped();
 
     void closeDialogListening();
+
+    void setMenuItemColor(int color, MenuItem item);
 
 }

@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_listen_list_products"
+        android:icon="@drawable/ic_volume_up_black_36dp"
+        android:title="@string/action_listen_products"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_add_product"
-        android:icon="@drawable/ic_ic_blk_houndify_mic_floating"
+        android:icon="@drawable/ic_mic_black_36dp"
         android:title="@string/action_add_product"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 </menu>

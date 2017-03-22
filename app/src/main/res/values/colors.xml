@@ -9,6 +9,7 @@
     <color name="appLightBlue">#90d1d7</color>
     <color name="appMenuButtonColorPressed">#d2d2d2</color>
     <color name="white">#FFF</color>
+    <color name="black">#000</color>
     <color name="color1">#3164d7</color>
     <color name="color2">#d92d29</color>
     <color name="color3">#eeaa10</color>

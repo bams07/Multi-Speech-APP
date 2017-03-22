@@ -15,6 +15,7 @@
     <string name="action_add_product">Add product</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="label_houndify">Houndify</string>
+    <string name="action_listen_products">Listen products</string>
     <string-array name="supported_languages">
         <item>US English</item>
         <item>UK English</item>

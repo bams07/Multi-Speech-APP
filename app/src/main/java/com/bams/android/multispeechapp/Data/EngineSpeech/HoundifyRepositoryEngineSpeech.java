@@ -74,6 +74,11 @@ public class HoundifyRepositoryEngineSpeech implements RepositoryEngineSpeech {
         }
     }
 
+    @Override
+    public void startTextToSpeech(String toSpeak) {
+
+    }
+
 
     private void startSearch() {
         if (mVoiceSearch != null) {
@@ -272,6 +277,16 @@ public class HoundifyRepositoryEngineSpeech implements RepositoryEngineSpeech {
         if (mVoiceSearch != null) {
             mVoiceSearch.stopRecording();
         }
+    }
+
+    @Override
+    public void onStopTextToSpeech() {
+
+    }
+
+    @Override
+    public boolean isSpeaking() {
+        return false;
     }
 
     /**

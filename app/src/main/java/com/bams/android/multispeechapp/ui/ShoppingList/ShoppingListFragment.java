@@ -17,6 +17,7 @@ import com.bams.android.multispeechapp.Presenter.ShoppingListPresenter;
 import com.bams.android.multispeechapp.R;
 import com.bams.android.multispeechapp.ui.ShoppingList.recycler.ProductsAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -30,10 +31,10 @@ public class ShoppingListFragment extends Fragment implements IShoppingListView 
     @BindView(R.id.loading_products)
     ProgressBar loadingProducts;
 
-
     private RecyclerView.Adapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private IShoppingListPresenter presenter;
+    private ArrayList<Product> listProducts;
 
     //    // TODO: Rename parameter arguments, choose names that match
 //    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -92,7 +93,8 @@ public class ShoppingListFragment extends Fragment implements IShoppingListView 
     }
 
     @Override
-    public void setItems(List<Product> items) {
+    public void setItems(ArrayList<Product> items) {
+        listProducts = items;
         // Hide progress bar
         loadingProducts.setVisibility(View.INVISIBLE);
 
@@ -102,12 +104,14 @@ public class ShoppingListFragment extends Fragment implements IShoppingListView 
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getActivity());
-        mLayoutManager.setReverseLayout(true);
-        mLayoutManager.setStackFromEnd(true);
         recyclerViewProducts.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
         recyclerViewProducts.setAdapter(new ProductsAdapter(items, R.layout.product_item_recycler_view));
+    }
+
+    public ArrayList<Product> getListProducts() {
+        return listProducts;
     }
 
     //    // TODO: Rename method, update argument and hook method into UI event

@@ -12,9 +12,15 @@ public interface IDashboardPresenter {
 
     void addProduct(String data);
 
+    void speechProduct(String toSpeak);
+
     void onListenToAdd();
 
     void changeSpeechEngine(EngineSpeech engineSpeech);
 
     void onStopListen();
+
+    void onStopTextToSpeech();
+
+    boolean isSpeaking();
 }

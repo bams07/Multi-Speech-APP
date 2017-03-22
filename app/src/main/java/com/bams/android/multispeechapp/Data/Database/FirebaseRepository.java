@@ -15,6 +15,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class FirebaseRepository implements RepositoryDatabase {
     private final String LIST = "products";
     private FirebaseDatabase mDatabase;
     private DatabaseReference mReference;
-    private List<Product> items;
+    private ArrayList<Product> items;
     private IProductsInteractor.Callback callback;
     private Query fbQuery;
 
@@ -63,7 +64,9 @@ public class FirebaseRepository implements RepositoryDatabase {
                         for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
                             items.add(productSnapshot.getValue(Product.class));
                         }
-
+                        // Reverse order
+                        Collections.reverse(items);
+                        // Callback
                         callback.onGetItems(items);
                     }
 
@@ -85,6 +88,8 @@ public class FirebaseRepository implements RepositoryDatabase {
                         for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
                             items.add(productSnapshot.getValue(Product.class));
                         }
+                        // Reverse order
+                        Collections.reverse(items);
                         // Callback
                         callback.onGetItems(items);
                     }
@@ -105,7 +110,7 @@ public class FirebaseRepository implements RepositoryDatabase {
     @Override
     public FirebaseRepository getByStatus(ProductStatus status) {
         items = new ArrayList<Product>();
-        fbQuery =  mReference.child(status.toString());
+        fbQuery = mReference.child(status.toString());
         return this;
     }
 

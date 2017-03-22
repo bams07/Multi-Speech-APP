@@ -12,12 +12,17 @@ import android.widget.Toast;
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Data.ISpeechInteractor;
 import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
+import com.bams.android.multispeechapp.Utils.IbmWatsonModel;
 import com.ibm.watson.developer_cloud.android.library.audio.MicrophoneInputStream;
 import com.ibm.watson.developer_cloud.android.library.audio.utils.ContentType;
+import com.ibm.watson.developer_cloud.http.ServiceCall;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.SpeechToText;
+import com.ibm.watson.developer_cloud.speech_to_text.v1.model.Customization;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.RecognizeOptions;
+import com.ibm.watson.developer_cloud.speech_to_text.v1.model.SpeechModel;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.SpeechResults;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.Transcript;
+import com.ibm.watson.developer_cloud.speech_to_text.v1.model.Word;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.BaseRecognizeCallback;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.RecognizeCallback;
 
@@ -72,6 +77,11 @@ public class IbmWatsonRepositoryEngineSpeech implements RepositoryEngineSpeech {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void startTextToSpeech(String toSpeak) {
+
     }
 
     public BaseRecognizeCallback getBaseCallback(final ISpeechInteractor.Callback callback) {
@@ -186,6 +196,16 @@ public class IbmWatsonRepositoryEngineSpeech implements RepositoryEngineSpeech {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onStopTextToSpeech() {
+
+    }
+
+    @Override
+    public boolean isSpeaking() {
+        return false;
     }
 
     @Override

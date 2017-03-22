@@ -5,8 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
+import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.util.Log;
 import android.widget.Toast;
 import android.speech.SpeechRecognizer;
@@ -19,6 +22,7 @@ import com.bams.android.multispeechapp.R;
 import com.github.zagum.speechrecognitionview.adapters.RecognitionListenerAdapter;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * Created by bams on 3/10/17.
@@ -26,11 +30,13 @@ import java.util.ArrayList;
 
 public class AndroidSpeechRepositoryEngineSpeech extends Activity implements RepositoryEngineSpeech {
 
+    private TextToSpeech mTextToSpeech;
     private Context context;
     private ISpeechInteractor.Callback callback;
     private SpeechRecognizer mSpeechRecognizer;
     private Intent mSpeechRecognizerIntent;
     private boolean mIsListening;
+    private boolean mIsPlaying;
 
     public AndroidSpeechRepositoryEngineSpeech(Context context, final ISpeechInteractor.Callback callback) {
         this.context = context;
@@ -78,6 +84,28 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements Rep
                 callback.onPartialResults(matches.get(0));
             }
         });
+
+        mTextToSpeech = new TextToSpeech(this.context, new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+
+            }
+        });
+        mTextToSpeech.setOnUtteranceProgressListener(new UtteranceProgressListener() {
+            @Override
+            public void onDone(String utteranceId) {
+                mIsPlaying = false;
+            }
+
+            @Override
+            public void onError(String utteranceId) {
+            }
+
+            @Override
+            public void onStart(String utteranceId) {
+                mIsPlaying = true;
+            }
+        });
     }
 
     @Override
@@ -85,8 +113,10 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements Rep
         if (isConnected()) {
             if (!mIsListening) {
                 mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
+                mIsListening = true;
             } else {
                 mSpeechRecognizer.cancel();
+                mIsListening = false;
             }
         } else {
             Toast.makeText(this.context, "Please Connect to Internet", Toast.LENGTH_SHORT).show();
@@ -95,8 +125,29 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements Rep
     }
 
     @Override
+    public void startTextToSpeech(String toSpeak) {
+        mTextToSpeech.setLanguage(Locale.US);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mTextToSpeech.speak(toSpeak, TextToSpeech.QUEUE_ADD, null, "PRODUCTS");
+        } else {
+            mTextToSpeech.speak(toSpeak, TextToSpeech.QUEUE_ADD, null);
+        }
+    }
+
+    @Override
+    public void onStopTextToSpeech() {
+        mTextToSpeech.stop();
+    }
+
+    @Override
+    public boolean isSpeaking() {
+        return mTextToSpeech.isSpeaking();
+    }
+
+    @Override
     public void onStopListen() {
         mSpeechRecognizer.cancel();
+        mIsListening = false;
     }
 
     /**
