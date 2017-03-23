@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
@@ -354,11 +355,57 @@ public class DashboardActivity extends AppCompatActivity
         btnDialogAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenter.addProduct(productData);
+                if (checkIfProductExits(productData)) {
+                    dialogListening.hide();
+                    showDialogToAddProduct(productData);
+                } else {
+                    presenter.addProduct(productData);
+                }
                 presenter.onStopListen();
             }
         });
         textViewProcess = ButterKnife.findById(dialogListening, R.id.textViewProcess);
         dialogListening.show();
+    }
+
+
+    private boolean checkIfProductExits(String checkProduct) {
+        ShoppingListFragment sListFragment = (ShoppingListFragment)
+                getSupportFragmentManager().findFragmentByTag("SHOPPING_LIST");
+
+        ArrayList<Product> items = new ArrayList<Product>();
+
+        items = sListFragment.getListProducts();
+
+        for (Product item : items) {
+            if (item.name.equals(productData)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void showDialogToAddProduct(final String productData) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        presenter.addProduct(productData);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(String.format("The product \"%s\" it's already created, you want to create new one?", productData))
+                .setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+
     }
 }
