@@ -403,7 +403,7 @@ public class DashboardActivity extends AppCompatActivity
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(String.format("The product \"%s\" it's already created, you want to create new one?", productData))
+        builder.setMessage(String.format("The product \"%s\" it's already exists, you want to create new one?", productData))
                 .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
 
