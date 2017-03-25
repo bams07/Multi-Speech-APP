@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/nav_header_height"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:theme="@style/ThemeOverlay.AppCompat.Light"
+    android:weightSum="1">
+
+
+    <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        card_view:cardCornerRadius="2dp"
+        card_view:contentPadding="10dp">
+
+        <RelativeLayout
+            android:id="@+id/headerProduct"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/product_date"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="Arial"
+                android:text="22/07/2017 20:06:10"
+                android:textColor="#000"
+                android:textSize="15dp"
+                android:textStyle="normal|bold"
+                android:typeface="normal" />
+
+            <TextView
+                android:id="@+id/product_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignRight="@id/product_date"
+                android:fontFamily="Arial"
+                android:gravity="right"
+                android:text="PENDENT"
+                android:textColor="#fc0000"
+                android:textSize="15dp"
+                android:textStyle="normal|bold" />
+
+            <TextView
+                android:id="@+id/product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/product_date"
+                android:layout_column="0"
+                android:layout_columnWeight="2"
+                android:fontFamily="Arial"
+                android:text="1x Caja de Leche Dos Pinos"
+                android:textColor="#f18706"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textSize="20dp" />
+
+        </RelativeLayout>
+
+
+    </android.support.v7.widget.CardView>
+</LinearLayout>
+

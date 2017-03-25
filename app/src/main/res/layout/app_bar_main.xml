@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="com.bams.android.multispeechapp.ui.Dashboard.DashboardActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppMultiSpeech">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:title="@string/app_name"
+            app:popupTheme="@style/AppMultiSpeech">
+
+        </android.support.v7.widget.Toolbar>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <include layout="@layout/content_main"  />
+
+    <com.github.clans.fab.FloatingActionMenu
+        android:id="@+id/menu_speech_engines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        app:menu_colorNormal="@color/appGreen"
+        android:padding="10dp"
+        app:menu_colorPressed="@color/appGreen"
+        app:menu_fab_label="Speech Service"
+        app:menu_icon="@android:drawable/ic_menu_manage"
+        app:menu_labels_colorNormal="#79353333"
+        app:menu_labels_ellipsize="end"
+        app:menu_labels_singleLine="true">
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_btn_watson"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_ibm_watson_logo"
+            app:fab_colorNormal="#ffffff"
+            app:fab_colorPressed="@color/appMenuButtonColorPressed"
+            app:fab_label="@string/label_ibm_watson"
+            app:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_btn_google_machine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_google_logo"
+            app:fab_colorNormal="#ffffff"
+            app:fab_colorPressed="@color/appMenuButtonColorPressed"
+            app:fab_label="@string/label_google_machine"
+            app:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_btn_houndify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_houndify_logo"
+            app:fab_colorNormal="#ffffff"
+            app:fab_colorPressed="@color/appMenuButtonColorPressed"
+            app:fab_label="@string/label_houndify"
+            app:fab_size="mini" />
+
+        <com.github.clans.fab.FloatingActionButton
+            android:id="@+id/menu_btn_android_speech"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_android_black_24dp"
+            app:fab_colorNormal="#ffffff"
+            app:fab_colorPressed="@color/appMenuButtonColorPressed"
+            app:fab_label="@string/label_android_speech"
+            app:fab_size="mini" />
+
+    </com.github.clans.fab.FloatingActionMenu>
+
+
+</android.support.design.widget.CoordinatorLayout>
