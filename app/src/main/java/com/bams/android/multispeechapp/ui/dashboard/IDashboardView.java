@@ -34,4 +34,6 @@ public interface IDashboardView {
 
     void setMenuItemColor(int color, MenuItem item);
 
+    void toggleMenuItem(MenuItem item, boolean visible);
+
 }

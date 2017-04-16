@@ -1,11 +1,10 @@
 package com.bams.android.multispeechapp.Data.Database;
 
-import android.renderscript.Script;
 import android.util.Log;
 
 import com.bams.android.multispeechapp.Constants.ProductStatus;
 import com.bams.android.multispeechapp.Data.IProductsInteractor;
-import com.bams.android.multispeechapp.Data.Repository.RepositoryDatabase;
+import com.bams.android.multispeechapp.Data.Repository.IRepositoryDatabase;
 import com.bams.android.multispeechapp.Domain.Product;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,15 +16,12 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * Created by bams on 3/11/17.
  */
 
-public class FirebaseRepository implements RepositoryDatabase {
+public class FirebaseRepository implements IRepositoryDatabase {
 
     private final String LIST = "products";
     private FirebaseDatabase mDatabase;

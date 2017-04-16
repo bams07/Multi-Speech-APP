@@ -91,6 +91,7 @@ public class DashboardActivity extends AppCompatActivity
     private final int SELECTED_COLOR = Color.YELLOW;
     private String productData = null;
     private Dialog dialogListening;
+    private Menu mainMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,7 +101,8 @@ public class DashboardActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
         drawerLayout.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -140,6 +142,7 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+        this.mainMenu = menu;
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -179,12 +182,19 @@ public class DashboardActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+        // Handle my list menu action
         if (id == R.id.drawer_btn_my_list) {
             changeFragment(Fragment.SHOPPING_LIST_FRAGMENT);
+            toggleMenuItem(mainMenu.findItem(R.id.action_add_product), true);
+            toggleMenuItem(mainMenu.findItem(R.id.action_listen_list_products), true);
+            toggleVisibilityMenuEngineSpeech(View.VISIBLE);
 
-            // Handle the camera action
+            // Handle the reports menu action
         } else if (id == R.id.drawer_btn_reports) {
             changeFragment(Fragment.REPORTS_FRAGMENT);
+            toggleMenuItem(mainMenu.findItem(R.id.action_add_product), false);
+            toggleMenuItem(mainMenu.findItem(R.id.action_listen_list_products), false);
+            toggleVisibilityMenuEngineSpeech(View.INVISIBLE);
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -216,7 +226,8 @@ public class DashboardActivity extends AppCompatActivity
     }
 
 
-    @OnClick({R.id.menu_btn_watson, R.id.menu_btn_google_machine, R.id.menu_btn_android_speech, R.id.menu_btn_houndify})
+    @OnClick({R.id.menu_btn_watson, R.id.menu_btn_google_machine, R.id.menu_btn_android_speech,
+            R.id.menu_btn_houndify})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.menu_btn_watson:
@@ -237,10 +248,13 @@ public class DashboardActivity extends AppCompatActivity
     public void changeFragment(Fragment fragment) {
         switch (fragment) {
             case SHOPPING_LIST_FRAGMENT:
-                fragmentManager.beginTransaction().replace(R.id.content_main, new ShoppingListFragment(), "SHOPPING_LIST").commit();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_main, new ShoppingListFragment(), "SHOPPING_LIST")
+                        .commit();
                 break;
             case REPORTS_FRAGMENT:
-                fragmentManager.beginTransaction().replace(R.id.content_main, new ReportsFragment(), "REPORTS").commit();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_main, new ReportsFragment(), "REPORTS").commit();
                 break;
         }
     }
@@ -248,6 +262,10 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     public void toggleMenuEngineSpeech() {
         menuSpeechEngines.toggle(true);
+    }
+
+    public void toggleVisibilityMenuEngineSpeech(int visibility) {
+        menuSpeechEngines.setVisibility(visibility);
     }
 
     @Override
@@ -339,6 +357,11 @@ public class DashboardActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void toggleMenuItem(MenuItem item, boolean visible) {
+        item.setVisible(visible);
+    }
+
     public void openListeningDialog() {
         dialogListening.setContentView(R.layout.fragment_listening);
         progressListening = ButterKnife.findById(dialogListening, R.id.progressListening);
@@ -387,23 +410,26 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     private void showDialogToAddProduct(final String productData) {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which) {
-                    case DialogInterface.BUTTON_POSITIVE:
-                        presenter.addProduct(productData);
-                        break;
+        DialogInterface.OnClickListener dialogClickListener =
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which) {
+                            case DialogInterface.BUTTON_POSITIVE:
+                                presenter.addProduct(productData);
+                                break;
 
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked
-                        break;
-                }
-            }
-        };
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //No button clicked
+                                break;
+                        }
+                    }
+                };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage(String.format("The product \"%s\" it's already exists, you want to create new one?", productData))
+        builder.setMessage(
+                String.format("The product \"%s\" it's already exists, you want to create new one?",
+                        productData))
                 .setPositiveButton("Yes", dialogClickListener)
                 .setNegativeButton("No", dialogClickListener).show();
 

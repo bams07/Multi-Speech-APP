@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Data.ISpeechInteractor;
-import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
+import com.bams.android.multispeechapp.Data.Repository.IRepositoryEngineSpeech;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.hound.android.sdk.VoiceSearch;
 import com.hound.android.sdk.VoiceSearchInfo;
@@ -33,7 +33,7 @@ import java.util.UUID;
  * Created by bams on 3/10/17.
  */
 
-public class HoundifyRepositoryEngineSpeech implements RepositoryEngineSpeech {
+public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
 
     private Context context;
     private ISpeechInteractor.Callback callback;

@@ -1,13 +1,163 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
     tools:context="com.bams.android.multispeechapp.ui.Reports.ReportsFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Reports" />
 
-</FrameLayout>
+    <RelativeLayout
+        android:id="@+id/checkboxStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/checkboxPendent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:checked="true"
+                android:text="@string/product_status_pendent" />
+
+            <RadioButton
+                android:id="@+id/checkboxBought"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_toEndOf="@+id/checkboxPendent"
+                android:text="@string/product_status_bought" />
+        </RadioGroup>
+
+
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/fromLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/checkboxStatus"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+
+        <TextView
+            android:id="@+id/textViewFromLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="FROM:"
+            android:textSize="15dp"
+
+            android:textStyle="normal|bold" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewFromDate"
+                style="@android:style/Widget.Holo.Spinner"
+                android:layout_width="178dp"
+                android:layout_height="wrap_content"
+                android:text="Wed, Sep 19, 2012"
+                android:textSize="15dp"
+
+                />
+
+            <TextView
+                android:id="@+id/textViewFromTime"
+                style="@android:style/Widget.Holo.Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:gravity="end"
+                android:text="7:00 am"
+                android:textSize="15dp"
+
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/toLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fromLinear"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <TextView
+            android:id="@+id/textViewToLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:paddingEnd="20dp"
+            android:text="TO:"
+            android:textSize="15dp"
+
+            android:textStyle="normal|bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textViewToDate"
+                style="@android:style/Widget.Holo.Spinner"
+                android:layout_width="178dp"
+                android:layout_height="wrap_content"
+                android:text="Wed, Sep 19, 2012"
+                android:textSize="15dp"
+
+                />
+
+            <TextView
+                android:id="@+id/textViewToTime"
+                style="@android:style/Widget.Holo.Spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:gravity="end"
+                android:text="8:00 am"
+                android:textSize="15dp"
+
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <!--<EditText-->
+        <!--android:id="@+id/ediTextSeachProduct"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/toLinear"-->
+        <!--android:ems="10"-->
+        <!--android:hint="SEARCH"-->
+        <!--android:inputType="textPersonName" />-->
+
+    <Button
+        android:layout_below="@+id/toLinear"
+        android:id="@+id/buttonSearchProduct"
+        android:layout_width="match_parent"
+        android:text="SEARCH"
+        android:layout_height="wrap_content" />
+
+
+</RelativeLayout>

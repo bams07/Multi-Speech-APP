@@ -10,15 +10,11 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.UtteranceProgressListener;
-import android.util.Log;
 import android.widget.Toast;
 import android.speech.SpeechRecognizer;
-import android.speech.RecognitionListener;
 
-import com.bams.android.multispeechapp.Constants.RequestCodes;
 import com.bams.android.multispeechapp.Data.ISpeechInteractor;
-import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
-import com.bams.android.multispeechapp.R;
+import com.bams.android.multispeechapp.Data.Repository.IRepositoryEngineSpeech;
 import com.github.zagum.speechrecognitionview.adapters.RecognitionListenerAdapter;
 
 import java.util.ArrayList;
@@ -28,7 +24,7 @@ import java.util.Locale;
  * Created by bams on 3/10/17.
  */
 
-public class AndroidSpeechRepositoryEngineSpeech extends Activity implements RepositoryEngineSpeech {
+public class AndroidSpeechRepositoryEngineSpeech extends Activity implements IRepositoryEngineSpeech {
 
     private TextToSpeech mTextToSpeech;
     private Context context;

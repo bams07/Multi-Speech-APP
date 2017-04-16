@@ -1,16 +1,10 @@
 package com.bams.android.multispeechapp.Data;
 
-import android.telecom.Call;
-
 import com.bams.android.multispeechapp.Constants.ProductStatus;
-import com.bams.android.multispeechapp.Data.Database.FirebaseRepository;
-import com.bams.android.multispeechapp.Data.Repository.RepositoryDatabase;
-import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Domain.Product;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * Created by bams on 3/12/17.
@@ -19,6 +13,8 @@ import java.util.List;
 public interface IProductsInteractor {
 
     void getProducts();
+
+    void getProducts(Date dateFrom, Date dateTo, ProductStatus status);
 
     void addProduct(Product item);
 

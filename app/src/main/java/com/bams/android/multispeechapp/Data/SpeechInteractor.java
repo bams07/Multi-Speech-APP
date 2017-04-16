@@ -7,7 +7,7 @@ import com.bams.android.multispeechapp.Data.EngineSpeech.AndroidSpeechRepository
 import com.bams.android.multispeechapp.Data.EngineSpeech.GoogleMachineRepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Data.EngineSpeech.HoundifyRepositoryEngineSpeech;
 import com.bams.android.multispeechapp.Data.EngineSpeech.IbmWatsonRepositoryEngineSpeech;
-import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
+import com.bams.android.multispeechapp.Data.Repository.IRepositoryEngineSpeech;
 
 /**
  * Created by bams on 3/9/17.
@@ -15,10 +15,10 @@ import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
 
 public class SpeechInteractor implements ISpeechInteractor {
 
-    private RepositoryEngineSpeech repository;
+    private IRepositoryEngineSpeech repository;
     private Context context;
 
-    public SpeechInteractor(RepositoryEngineSpeech repository, Context context) {
+    public SpeechInteractor(IRepositoryEngineSpeech repository, Context context) {
         this.repository = repository;
         this.context = context;
     }

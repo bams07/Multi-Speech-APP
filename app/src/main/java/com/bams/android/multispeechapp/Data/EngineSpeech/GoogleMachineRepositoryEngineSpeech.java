@@ -3,13 +3,13 @@ package com.bams.android.multispeechapp.Data.EngineSpeech;
 import android.content.Context;
 
 import com.bams.android.multispeechapp.Data.ISpeechInteractor;
-import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
+import com.bams.android.multispeechapp.Data.Repository.IRepositoryEngineSpeech;
 
 /**
  * Created by bams on 3/10/17.
  */
 
-public class GoogleMachineRepositoryEngineSpeech implements RepositoryEngineSpeech {
+public class GoogleMachineRepositoryEngineSpeech implements IRepositoryEngineSpeech {
 
     private Context context;
     private ISpeechInteractor.Callback callback;

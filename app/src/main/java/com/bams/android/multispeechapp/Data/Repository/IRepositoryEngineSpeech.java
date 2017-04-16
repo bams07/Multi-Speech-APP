@@ -6,7 +6,7 @@ import com.bams.android.multispeechapp.Data.ISpeechInteractor;
  * Created by bams on 3/10/17.
  */
 
-public interface RepositoryEngineSpeech {
+public interface IRepositoryEngineSpeech {
 
     void startRecognition();
 

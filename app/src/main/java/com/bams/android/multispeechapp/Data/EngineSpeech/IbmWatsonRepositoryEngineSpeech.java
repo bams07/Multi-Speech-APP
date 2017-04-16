@@ -3,38 +3,26 @@ package com.bams.android.multispeechapp.Data.EngineSpeech;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Data.ISpeechInteractor;
-import com.bams.android.multispeechapp.Data.Repository.RepositoryEngineSpeech;
-import com.bams.android.multispeechapp.Utils.IbmWatsonModel;
+import com.bams.android.multispeechapp.Data.Repository.IRepositoryEngineSpeech;
 import com.ibm.watson.developer_cloud.android.library.audio.MicrophoneInputStream;
 import com.ibm.watson.developer_cloud.android.library.audio.utils.ContentType;
-import com.ibm.watson.developer_cloud.http.ServiceCall;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.SpeechToText;
-import com.ibm.watson.developer_cloud.speech_to_text.v1.model.Customization;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.RecognizeOptions;
-import com.ibm.watson.developer_cloud.speech_to_text.v1.model.SpeechModel;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.SpeechResults;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.model.Transcript;
-import com.ibm.watson.developer_cloud.speech_to_text.v1.model.Word;
 import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.BaseRecognizeCallback;
-import com.ibm.watson.developer_cloud.speech_to_text.v1.websocket.RecognizeCallback;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by bams on 3/10/17.
  */
 
-public class IbmWatsonRepositoryEngineSpeech implements RepositoryEngineSpeech {
+public class IbmWatsonRepositoryEngineSpeech implements IRepositoryEngineSpeech {
 
     private Context context;
     private ISpeechInteractor.Callback callback;

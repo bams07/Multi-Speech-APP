@@ -1,4 +1,4 @@
-package com.bams.android.multispeechapp.ui.ShoppingList.recycler;
+package com.bams.android.multispeechapp.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
