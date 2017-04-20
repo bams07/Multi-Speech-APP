@@ -31,6 +31,7 @@ public class IbmWatsonRepositoryEngineSpeech implements IRepositoryEngineSpeech 
     private RecognizeOptions mRecognizeOptions = getRecognizeOptions();
     private BaseRecognizeCallback mBaseCallback;
     private boolean listening = false;
+    private String TAG;
 
     public IbmWatsonRepositoryEngineSpeech(Context context, ISpeechInteractor.Callback callback) {
         this.context = context;
@@ -38,7 +39,8 @@ public class IbmWatsonRepositoryEngineSpeech implements IRepositoryEngineSpeech 
     }
 
     @Override
-    public void startRecognition() {
+    public void startRecognition(String TAG) {
+        this.TAG = TAG;
         mInputStream = new MicrophoneInputStream(true);
 
         if (!listening) {
@@ -61,7 +63,7 @@ public class IbmWatsonRepositoryEngineSpeech implements IRepositoryEngineSpeech 
                 mInputStream.close();
                 listening = false;
             } catch (Exception e) {
-                callback.onErrorListen(e.toString());
+                callback.onErrorListen(e.toString(), TAG);
                 e.printStackTrace();
             }
         }
@@ -86,13 +88,13 @@ public class IbmWatsonRepositoryEngineSpeech implements IRepositoryEngineSpeech 
             @Override
             public void onConnected() {
                 super.onConnected();
-                callback.onBeginningOfSpeech();
+                callback.onBeginningOfSpeech(TAG);
             }
 
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                callback.onErrorListen(e.toString());
+                callback.onErrorListen(e.toString(), TAG);
             }
 
             @Override
@@ -101,10 +103,10 @@ public class IbmWatsonRepositoryEngineSpeech implements IRepositoryEngineSpeech 
                 try {
                     mInputStream.close();
                 } catch (IOException e) {
-                    callback.onErrorListen(e.toString());
+                    callback.onErrorListen(e.toString(), TAG);
                     e.printStackTrace();
                 }
-                callback.onEndSpeech();
+                callback.onEndSpeech(TAG);
             }
         };
 
@@ -130,16 +132,16 @@ public class IbmWatsonRepositoryEngineSpeech implements IRepositoryEngineSpeech 
         return mRecognizeOptions = new RecognizeOptions.Builder()
                 .continuous(true)
                 .contentType(ContentType.OPUS.toString())
-                .model(getLanguage())
+                .model(getLanguage("Spanish"))
                 .smartFormatting(true)
                 .interimResults(true)
                 .inactivityTimeout(2000)
                 .build();
     }
 
-    private String getLanguage() {
-        String selectedItem = "US English";
-        switch (selectedItem) {
+    private String getLanguage(String selectedLanguage) {
+        String selectedItem = "es-ES_BroadbandModel";
+        switch (selectedLanguage) {
             case "Modern Standard Arabic":
                 selectedItem = "ar-AR_BroadbandModel";
                 break;
@@ -172,8 +174,8 @@ public class IbmWatsonRepositoryEngineSpeech implements IRepositoryEngineSpeech 
 
     private void showResponseFromWatsonService(List<Transcript> response, ISpeechInteractor.Callback callback) {
         String data = response.get(0).getAlternatives().get(0).getTranscript();
-        callback.onPartialResults(data);
-        callback.onResponseListen(data);
+        callback.onPartialResults(data, TAG);
+        callback.onResponseListen(data, TAG);
     }
 
     @Override

@@ -9,13 +9,11 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,8 +26,11 @@ import android.widget.Toast;
 
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Constants.Fragment;
+import com.bams.android.multispeechapp.Constants.ProductStatus;
+import com.bams.android.multispeechapp.Helpers.ProductsBoughtCodes;
 import com.bams.android.multispeechapp.Constants.SpeechStatus;
 import com.bams.android.multispeechapp.Domain.Product;
+import com.bams.android.multispeechapp.Helpers.ProductVariants;
 import com.bams.android.multispeechapp.Presenter.DashboardPresenter;
 import com.bams.android.multispeechapp.Presenter.IDashboardPresenter;
 import com.bams.android.multispeechapp.R;
@@ -39,21 +40,19 @@ import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public class DashboardActivity extends AppCompatActivity
         implements IDashboardView, NavigationView.OnNavigationItemSelectedListener {
 
     @BindView(R.id.menu_btn_watson)
     FloatingActionButton menuBtnWatson;
-    @BindView(R.id.menu_btn_google_machine)
-    FloatingActionButton menuBtnGoogleMachine;
     @BindView(R.id.menu_btn_android_speech)
     FloatingActionButton menuBtnAndroidSpeech;
     @BindView(R.id.menu_speech_engines)
@@ -159,17 +158,10 @@ public class DashboardActivity extends AppCompatActivity
                 presenter.onListenToAdd();
                 return true;
             case R.id.action_listen_list_products:
-                if (!presenter.isSpeaking()) {
-
-                    setMenuItemColor(R.color.appYellow, item);
-                    listenProducts(item);
-
-                } else {
-
-                    setMenuItemColor(R.color.black, item);
-                    presenter.onStopTextToSpeech();
-                }
-
+                listenProducts(item);
+                return true;
+            case R.id.action_bought_product:
+                listenToBought();
                 return true;
         }
 
@@ -187,6 +179,7 @@ public class DashboardActivity extends AppCompatActivity
             changeFragment(Fragment.SHOPPING_LIST_FRAGMENT);
             toggleMenuItem(mainMenu.findItem(R.id.action_add_product), true);
             toggleMenuItem(mainMenu.findItem(R.id.action_listen_list_products), true);
+            toggleMenuItem(mainMenu.findItem(R.id.action_bought_product), true);
             toggleVisibilityMenuEngineSpeech(View.VISIBLE);
 
             // Handle the reports menu action
@@ -194,6 +187,7 @@ public class DashboardActivity extends AppCompatActivity
             changeFragment(Fragment.REPORTS_FRAGMENT);
             toggleMenuItem(mainMenu.findItem(R.id.action_add_product), false);
             toggleMenuItem(mainMenu.findItem(R.id.action_listen_list_products), false);
+            toggleMenuItem(mainMenu.findItem(R.id.action_bought_product), false);
             toggleVisibilityMenuEngineSpeech(View.INVISIBLE);
         }
 
@@ -201,40 +195,49 @@ public class DashboardActivity extends AppCompatActivity
         return true;
     }
 
-    void listenProducts(MenuItem item) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    ShoppingListFragment sListFragment = (ShoppingListFragment)
-                            getSupportFragmentManager().findFragmentByTag("SHOPPING_LIST");
 
-                    ArrayList<Product> items = new ArrayList<Product>();
+    /**
+     * START TO LISTEN PRODUCTS OF LIST BY TEXT TO SPEECH
+     */
+    public void listenProducts(MenuItem item) {
 
-                    if (sListFragment != null) {
+        if (!presenter.isSpeaking()) {
 
-                        items = sListFragment.getListProducts();
-                        for (Product item : items) {
-                            presenter.speechProduct(item.name);
+            setMenuItemColor(R.color.appYellow, item);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        ShoppingListFragment sListFragment = (ShoppingListFragment)
+                                getSupportFragmentManager().findFragmentByTag("SHOPPING_LIST");
+
+                        ArrayList<Product> items = new ArrayList<Product>();
+
+                        if (sListFragment != null) {
+
+                            items = sListFragment.getListProducts();
+                            for (Product item : items) {
+                                presenter.speechProduct(item.name);
+                            }
                         }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
-            }
-        }).start();
+            }).start();
+        } else {
+            setMenuItemColor(R.color.black, item);
+            presenter.onStopTextToSpeech();
+        }
     }
 
 
-    @OnClick({R.id.menu_btn_watson, R.id.menu_btn_google_machine, R.id.menu_btn_android_speech,
+    @OnClick({R.id.menu_btn_watson, R.id.menu_btn_android_speech,
             R.id.menu_btn_houndify})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.menu_btn_watson:
                 presenter.changeSpeechEngine(EngineSpeech.IBM_WATSON);
-                break;
-            case R.id.menu_btn_google_machine:
-                presenter.changeSpeechEngine(EngineSpeech.GOOGLE_MACHINE_LEARNING);
                 break;
             case R.id.menu_btn_android_speech:
                 presenter.changeSpeechEngine(EngineSpeech.ANDROID_SPEECH);
@@ -277,9 +280,6 @@ public class DashboardActivity extends AppCompatActivity
             case ANDROID_SPEECH:
                 menuBtnAndroidSpeech.setColorNormal(SELECTED_COLOR);
                 break;
-            case GOOGLE_MACHINE_LEARNING:
-                menuBtnGoogleMachine.setColorNormal(SELECTED_COLOR);
-                break;
             case HOUNDIFY:
                 menuBtnHoundify.setColorNormal(SELECTED_COLOR);
                 break;
@@ -295,9 +295,6 @@ public class DashboardActivity extends AppCompatActivity
             case ANDROID_SPEECH:
                 menuBtnAndroidSpeech.setColorNormal(DISELECTED_COLOR);
                 break;
-            case GOOGLE_MACHINE_LEARNING:
-                menuBtnGoogleMachine.setColorNormal(DISELECTED_COLOR);
-                break;
             case HOUNDIFY:
                 menuBtnHoundify.setColorNormal(DISELECTED_COLOR);
                 break;
@@ -305,8 +302,8 @@ public class DashboardActivity extends AppCompatActivity
     }
 
     @Override
-    public void showProductAdded() {
-        Toast.makeText(this, "NEW PRODUCT ADDED", Toast.LENGTH_SHORT).show();
+    public void showProductAdded(Product product) {
+        Toast.makeText(this, "NEW PRODUCT ADDED - " + product.status, LENGTH_SHORT).show();
     }
 
     @Override
@@ -337,6 +334,51 @@ public class DashboardActivity extends AppCompatActivity
     @Override
     public void setProductToAccept(String data) {
         productData = data;
+    }
+
+    @Override
+    public void setProductToBought(String data) {
+        // PRODUCT TO FIND
+        String command = data.toLowerCase();
+        if (ProductsBoughtCodes.haveCodes(command)) {
+            try {
+
+                // PARSE NAME OF THE PRODUCT
+                String productName = ProductVariants.parseNumberToLetter(
+                        ProductsBoughtCodes.replaceCodes(data.toLowerCase(), 0).trim(), 0);
+                Product newItem = null;
+
+                ShoppingListFragment sListFragment = (ShoppingListFragment)
+                        getSupportFragmentManager().findFragmentByTag("SHOPPING_LIST");
+
+                ArrayList<Product> items = new ArrayList<Product>();
+
+                if (sListFragment != null) {
+
+                    items = sListFragment.getListProducts();
+
+                    for (Product item : items) {
+                        if (productName.equals(ProductVariants
+                                .parseNumberToLetter(item.name.toLowerCase(), 0))) {
+
+                            // DELETE PRODUCT
+                            presenter.deleteProduct(item.status, item.uid);
+                            // NEW VALUES OF PRODUCT
+                            newItem = item;
+                            newItem.setStatus(ProductStatus.BOUGHT.toString());
+                            newItem.setDateTime(new Date().getTime());
+                            // ADD NEW PRODUCT
+                            presenter.addProduct(newItem);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(this, "WE DON'T FOUND THIS PRODUCT, COULD YOU CHANGE MANUALLY",
+                    Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -378,13 +420,17 @@ public class DashboardActivity extends AppCompatActivity
         btnDialogAddProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (checkIfProductExits(productData)) {
-                    dialogListening.hide();
-                    showDialogToAddProduct(productData);
-                } else {
-                    presenter.addProduct(productData);
+                if (productData != null) {
+                    if (checkIfProductExits(productData)) {
+                        dialogListening.hide();
+                        showDialogToAddProduct(productData);
+                    } else {
+                        presenter.addProduct(new Product(productData, "", "", new Date().getTime(),
+                                ProductStatus.PENDENT.toString()));
+                        productData = null;
+                    }
+                    presenter.onStopListen();
                 }
-                presenter.onStopListen();
             }
         });
         textViewProcess = ButterKnife.findById(dialogListening, R.id.textViewProcess);
@@ -416,7 +462,9 @@ public class DashboardActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                                presenter.addProduct(productData);
+                                presenter.addProduct(
+                                        new Product(productData, "", "", new Date().getTime(),
+                                                ProductStatus.PENDENT.toString()));
                                 break;
 
                             case DialogInterface.BUTTON_NEGATIVE:
@@ -434,4 +482,18 @@ public class DashboardActivity extends AppCompatActivity
                 .setNegativeButton("No", dialogClickListener).show();
 
     }
+
+
+    /**
+     * PREPARE TO LISTEN TO SET THE PRODUCTO TO BOUGHT
+     */
+
+    private void listenToBought() {
+        if(presenter.getEngineSpeech() != EngineSpeech.ANDROID_SPEECH){
+            presenter.changeSpeechEngine(EngineSpeech.ANDROID_SPEECH);
+            toggleMenuEngineSpeech();
+        }
+        presenter.onListenToBought();
+    }
+
 }

@@ -12,4 +12,6 @@ import java.util.List;
 public interface IShoppingListView {
 
     void setItems(ArrayList<Product> items);
+
+    void showProductAdded(Product product);
 }

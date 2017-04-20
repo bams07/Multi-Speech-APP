@@ -30,6 +30,10 @@ public class ProductsInteractor implements IProductsInteractor {
 
     }
 
+    @Override public void deleteProduct(String status, String uid) {
+        this.repository.delete(status, uid);
+    }
+
     @Override
     public void addProduct(Product item) {
         this.repository.add(item);

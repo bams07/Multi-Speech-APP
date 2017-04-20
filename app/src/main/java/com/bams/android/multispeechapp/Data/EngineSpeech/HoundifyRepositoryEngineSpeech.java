@@ -41,19 +41,22 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
     private LocationManager mLocationManager;
     private JsonNode mLastConversationState;
     private VoiceSearchListener mVoiceListener;
+    private String TAG;
 
     public HoundifyRepositoryEngineSpeech(Context context, ISpeechInteractor.Callback callback) {
         this.context = context;
         this.callback = callback;
 
         // Initialize Miscellaneous Components
-        mLocationManager = (LocationManager) this.context.getSystemService(this.context.LOCATION_SERVICE);
+        mLocationManager =
+                (LocationManager) this.context.getSystemService(this.context.LOCATION_SERVICE);
         mVoiceListener = getVoiceListener();
 
     }
 
     @Override
-    public void startRecognition() {
+    public void startRecognition(String TAG) {
+        this.TAG = TAG;
         if (isConnected()) {
             // No VoiceSearch is active, start one.
             if (mVoiceSearch == null) {
@@ -97,7 +100,7 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
                 .build();
 
 
-        callback.onBeginningOfSpeech();
+        callback.onBeginningOfSpeech(TAG);
         // Toggle the text on our record button to indicate pressing it now will abort the search.
 //        recordButton.setText("Stop Recording");
 
@@ -109,10 +112,8 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
 
 
     /**
-     * Helper method called from the startSearch() method below to fill out user information
-     * needed in the HoundRequestInfo query object sent to the Hound server.
-     *
-     * @return
+     * Helper method called from the startSearch() method below to fill out user information needed
+     * in the HoundRequestInfo query object sent to the Hound server.
      */
     private HoundRequestInfo getHoundRequestInfo() {
         final HoundRequestInfo requestInfo = HoundRequestInfoFactory.getDefault(this.context);
@@ -139,8 +140,8 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
 
 
     /**
-     * Implementation of the VoiceSearchListener interface used for receiving search state information
-     * and the final search results.
+     * Implementation of the VoiceSearchListener interface used for receiving search state
+     * information and the final search results.
      */
     private VoiceSearchListener getVoiceListener() {
         if (mVoiceListener != null) {
@@ -156,7 +157,7 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
              */
             @Override
             public void onTranscriptionUpdate(final PartialTranscript transcript) {
-                callback.onPartialResults(transcript.getPartialTranscript());
+                callback.onPartialResults(transcript.getPartialTranscript(), TAG);
             }
 
             /**
@@ -175,7 +176,8 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
                         // in the next search. Note that at some point in the future the results CommandResult list
                         // may contain more than one item. For now it does not, so just grab the first result's
                         // conversation state and use it.
-                        mLastConversationState = response.getResults().get(0).getConversationState();
+                        mLastConversationState =
+                                response.getResults().get(0).getConversationState();
                     }
                     // We put pretty printing JSON on a separate thread as the server JSON can be quite large and will stutter the UI
                     // Not meant to be configuration change proof, this is just a demo
@@ -186,7 +188,7 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
                             try {
                                 jsonResponse = new JSONObject(info.getContentBody());
                             } catch (final JSONException ex) {
-                                callback.onErrorListen("Bad JSON\n\n" + response);
+                                callback.onErrorListen("Bad JSON\n\n" + response, TAG);
                                 jsonResponse = new JSONObject();
                             }
                             final JSONObject finalJson = jsonResponse;
@@ -194,13 +196,13 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
                                 // Will show the result in the UI List View
                                 showResponseFromHoundService(finalJson);
                             } catch (JSONException e) {
-                                callback.onErrorListen(e.toString());
+                                callback.onErrorListen(e.toString(), TAG);
                                 e.printStackTrace();
                             }
                         }
                     }).start();
                 } else {
-                    callback.onErrorListen("Request failed with" + response.getErrorMessage());
+                    callback.onErrorListen("Request failed with" + response.getErrorMessage(),TAG);
                 }
 
             }
@@ -214,7 +216,7 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
             @Override
             public void onError(final Exception ex, final VoiceSearchInfo info) {
                 mVoiceSearch = null;
-                callback.onErrorListen(exceptionToString(ex));
+                callback.onErrorListen(exceptionToString(ex), TAG);
             }
 
             /**
@@ -222,7 +224,7 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
              */
             @Override
             public void onRecordingStopped() {
-                callback.onEndSpeech();
+                callback.onEndSpeech(TAG);
             }
 
             /**
@@ -233,18 +235,14 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
             @Override
             public void onAbort(final VoiceSearchInfo info) {
                 mVoiceSearch = null;
-                callback.onEndSpeech();
+                callback.onEndSpeech(TAG);
             }
         };
 
     }
 
     /**
-     * Helper method for converting an Exception to a String
-     * with stack trace info.
-     *
-     * @param ex
-     * @return
+     * Helper method for converting an Exception to a String with stack trace info.
      */
     private static String exceptionToString(final Exception ex) {
         try {
@@ -267,8 +265,8 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
             JSONObject gg = (JSONObject) jsonResultsArr.get(i);
             finalResultList.add(gg.getString("WrittenResponse"));
         }
-        callback.onResponseListen(finalResultList.get(0));
-        callback.onPartialResults(finalResultList.get(0));
+        callback.onResponseListen(finalResultList.get(0), TAG);
+        callback.onPartialResults(finalResultList.get(0), TAG);
     }
 
 
@@ -291,12 +289,11 @@ public class HoundifyRepositoryEngineSpeech implements IRepositoryEngineSpeech {
 
     /**
      * Check connection
-     *
-     * @return
      */
     @Override
     public boolean isConnected() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(this.context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(this.context.CONNECTIVITY_SERVICE);
         NetworkInfo net = cm.getActiveNetworkInfo();
         return net != null && net.isAvailable() && net.isConnected();
     }

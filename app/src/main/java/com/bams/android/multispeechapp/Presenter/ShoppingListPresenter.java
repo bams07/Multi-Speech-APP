@@ -34,12 +34,30 @@ public class ShoppingListPresenter implements IShoppingListPresenter, IProductsI
     }
 
     @Override
-    public void onAddedProduct() {
+    public void addProduct(Product product) {
+        productsInteractor.addProduct(product);
+    }
 
+    @Override
+    public void deleteProduct(String status, String uid) {
+        productsInteractor.deleteProduct(status, uid);
+    }
+
+    /**
+     * PRODUCTS CALLBACKS
+     */
+
+    @Override
+    public void onAddedProduct(Product product) {
+        view.showProductAdded(product);
     }
 
     @Override
     public void onGetItems(ArrayList<Product> items) {
         view.setItems(items);
+    }
+
+    @Override public void onBoughtProduct() {
+
     }
 }

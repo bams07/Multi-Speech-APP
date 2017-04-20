@@ -14,7 +14,7 @@ public enum EngineSpeech {
     public String getUsername() {
         switch (this) {
             case IBM_WATSON:
-                return "3046f20e-a409-4c4a-8328-8aeeffbb6404";
+                return "926a2c30-dff2-4503-8b44-3f3940cf5eac";
             default:
                 throw new AssertionError("Unknown operations " + this);
         }
@@ -23,7 +23,7 @@ public enum EngineSpeech {
     public String getPassword() {
         switch (this) {
             case IBM_WATSON:
-                return "0wfTqhiBpZVf";
+                return "E5QEAoQy2snm";
             default:
                 throw new AssertionError("Unknown operations " + this);
         }

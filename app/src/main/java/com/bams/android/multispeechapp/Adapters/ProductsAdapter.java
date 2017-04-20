@@ -2,6 +2,7 @@ package com.bams.android.multispeechapp.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -23,12 +24,26 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
     private List<Product> products;
     private int itemLayout;
     private SimpleDateFormat ft;
+    private final OnLongClickListener listener;
 
+
+    public interface OnLongClickListener {
+        void onItemClick(Product product);
+
+    }
+
+    // Provide a suitable constructor (depends on the kind of dataset)
+    public ProductsAdapter(List<Product> products, int itemLayout, OnLongClickListener listener) {
+        this.products = products;
+        this.itemLayout = itemLayout;
+        this.listener = listener;
+    }
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public ProductsAdapter(List<Product> products, int itemLayout) {
         this.products = products;
         this.itemLayout = itemLayout;
+        this.listener = null;
     }
 
     @Override
@@ -47,6 +62,10 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
         holder.productStatus.setText(product.getStatus());
         holder.productDate.setText(ft.format(date));
         holder.itemView.setTag(product);
+        if(listener != null){
+            holder.bind(this.products.get(position), listener);
+        }
+
     }
 
     @Override
@@ -65,7 +84,18 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ViewHo
             productName = (TextView) itemView.findViewById(R.id.product_name);
             productStatus = (TextView) itemView.findViewById(R.id.product_status);
             productDate = (TextView) itemView.findViewById(R.id.product_date);
+
         }
+
+        public void bind(final Product product, final OnLongClickListener listener) {
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override public boolean onLongClick(View v) {
+                    listener.onItemClick(product);
+                    return false;
+                }
+            });
+        }
+
     }
 
     public void add(Product item, int position) {

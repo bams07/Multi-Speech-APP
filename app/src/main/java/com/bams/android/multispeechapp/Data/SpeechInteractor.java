@@ -48,8 +48,12 @@ public class SpeechInteractor implements ISpeechInteractor {
     }
 
     @Override
-    public void onListenToAdd() {
-        this.repository.startRecognition();
+    public void onListenToAdd(String TAG) {
+        this.repository.startRecognition(TAG);
+    }
+
+    @Override public void onListenToBought(String TAG) {
+        this.repository.startRecognition(TAG);
     }
 
     @Override

@@ -41,12 +41,16 @@ public class ReportsPresenter implements IReportsPresenter, IProductsInteractor.
     }
 
     @Override
-    public void onAddedProduct() {
+    public void onAddedProduct(Product product) {
 
     }
 
     @Override
     public void onGetItems(ArrayList<Product> items) {
         view.setItems(items);
+    }
+
+    @Override public void onBoughtProduct() {
+
     }
 }

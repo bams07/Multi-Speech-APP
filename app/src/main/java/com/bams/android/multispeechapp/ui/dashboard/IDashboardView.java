@@ -5,6 +5,7 @@ import android.view.MenuItem;
 
 import com.bams.android.multispeechapp.Constants.EngineSpeech;
 import com.bams.android.multispeechapp.Constants.SpeechStatus;
+import com.bams.android.multispeechapp.Domain.Product;
 
 /**
  * Created by bams on 3/9/17.
@@ -18,7 +19,7 @@ public interface IDashboardView {
 
     void setMenuDisSelectedEngine(EngineSpeech engineSpeech);
 
-    void showProductAdded();
+    void showProductAdded(Product product);
 
     void setOnPartialResults(String message);
 
@@ -27,6 +28,8 @@ public interface IDashboardView {
     void setOnErrorListen(String error);
 
     void setProductToAccept(String data);
+
+    void setProductToBought(String data);
 
     void setProgressAsStopped();
 

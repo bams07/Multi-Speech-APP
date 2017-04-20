@@ -17,6 +17,8 @@ public interface IRepositoryDatabase {
 
     void getSync();
 
+    void delete(String status, String uid);
+
     IRepositoryDatabase builder();
 
     IRepositoryDatabase getByStatus(ProductStatus status);

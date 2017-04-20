@@ -20,7 +20,7 @@ public class GoogleMachineRepositoryEngineSpeech implements IRepositoryEngineSpe
     }
 
     @Override
-    public void startRecognition() {
+    public void startRecognition(String TAG) {
 
     }
 

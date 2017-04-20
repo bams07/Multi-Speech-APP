@@ -51,16 +51,6 @@
             app:fab_size="mini" />
 
         <com.github.clans.fab.FloatingActionButton
-            android:id="@+id/menu_btn_google_machine"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_google_logo"
-            app:fab_colorNormal="#ffffff"
-            app:fab_colorPressed="@color/appMenuButtonColorPressed"
-            app:fab_label="@string/label_google_machine"
-            app:fab_size="mini" />
-
-        <com.github.clans.fab.FloatingActionButton
             android:id="@+id/menu_btn_houndify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

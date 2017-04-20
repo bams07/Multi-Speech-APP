@@ -16,12 +16,16 @@ public interface IProductsInteractor {
 
     void getProducts(Date dateFrom, Date dateTo, ProductStatus status);
 
+    void deleteProduct(String status, String uid);
+
     void addProduct(Product item);
 
     interface Callback {
-        void onAddedProduct();
+        void onAddedProduct(Product product);
 
         void onGetItems(ArrayList<Product> items);
+
+        void onBoughtProduct();
     }
 
 }

@@ -18,6 +18,7 @@
     <string name="action_listen_products">Listen products</string>
     <string name="product_status_pendent">PENDENT</string>
     <string name="product_status_bought">BOUGHT</string>
+    <string name="action_bought_product">Bought Product</string>
     <string-array name="supported_languages">
         <item>US English</item>
         <item>UK English</item>

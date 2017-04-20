@@ -8,7 +8,7 @@ import com.bams.android.multispeechapp.Data.ISpeechInteractor;
 
 public interface IRepositoryEngineSpeech {
 
-    void startRecognition();
+    void startRecognition(String TAG);
 
     void startTextToSpeech(String toSpeak);
 

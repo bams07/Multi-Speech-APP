@@ -40,7 +40,7 @@ public class FirebaseRepository implements IRepositoryDatabase {
     @Override
     public void add(Product item) {
         mReference.child(item.status).push().setValue(item);
-        this.callback.onAddedProduct();
+        this.callback.onAddedProduct(item);
     }
 
     @Override
@@ -59,6 +59,7 @@ public class FirebaseRepository implements IRepositoryDatabase {
                         items = new ArrayList<Product>();
                         for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
                             items.add(productSnapshot.getValue(Product.class));
+                            items.get(items.size() - 1).setUid(productSnapshot.getKey());
                         }
                         // Reverse order
                         Collections.reverse(items);
@@ -83,6 +84,7 @@ public class FirebaseRepository implements IRepositoryDatabase {
                         items = new ArrayList<Product>();
                         for (DataSnapshot productSnapshot : dataSnapshot.getChildren()) {
                             items.add(productSnapshot.getValue(Product.class));
+                            items.get(items.size() - 1).setUid(productSnapshot.getKey());
                         }
                         // Reverse order
                         Collections.reverse(items);
@@ -97,11 +99,13 @@ public class FirebaseRepository implements IRepositoryDatabase {
                 });
     }
 
+    public void delete(String status, String uid) {
+        mReference.child(status).child(uid).setValue(null);
+        callback.onBoughtProduct();
+    }
+
     /**
      * Get products base on status
-     *
-     * @param status
-     * @return
      */
     @Override
     public FirebaseRepository getByStatus(ProductStatus status) {
@@ -113,8 +117,6 @@ public class FirebaseRepository implements IRepositoryDatabase {
     /**
      * Get products between dates
      *
-     * @param from
-     * @param to
      * @return Instance
      */
     @Override

@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class Product {
 
-//    public String uid;
+    public String uid;
     public String name;
     public String brand;
     public String quantity;
@@ -30,12 +30,21 @@ public class Product {
     }
 
 
+    public String getUid() {
+        return uid;
+    }
+
+    public Product setUid(String uid) {
+        this.uid = uid;
+        return this;
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }
 
 
-    public void setDateTime (long dateTime) {
+    public void setDateTime(long dateTime) {
         this.dateTime = dateTime;
     }
 
@@ -63,7 +72,7 @@ public class Product {
         return quantity;
     }
 
-    public long getDateTime(){
+    public long getDateTime() {
         return this.dateTime;
     }
 

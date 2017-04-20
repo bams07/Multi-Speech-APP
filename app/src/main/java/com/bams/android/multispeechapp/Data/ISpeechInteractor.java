@@ -15,7 +15,9 @@ public interface ISpeechInteractor {
 
     void setHoundify(EngineSpeech engineSpeech, SpeechInteractor.Callback callback);
 
-    void onListenToAdd();
+    void onListenToAdd(String TAG);
+
+    void onListenToBought(String TAG);
 
     void onStopListen();
 
@@ -28,15 +30,15 @@ public interface ISpeechInteractor {
     interface Callback {
         void onChangeEngine(EngineSpeech engineSpeech);
 
-        void onResponseListen(String data);
+        void onResponseListen(String data, String TAG);
 
-        void onBeginningOfSpeech();
+        void onBeginningOfSpeech(String TAG);
 
-        void onErrorListen(String error);
+        void onErrorListen(String error, String TAG);
 
-        void onPartialResults(String message);
+        void onPartialResults(String message, String TAG);
 
-        void onEndSpeech();
+        void onEndSpeech(String TAG);
 
     }
 

@@ -24,7 +24,8 @@ import java.util.Locale;
  * Created by bams on 3/10/17.
  */
 
-public class AndroidSpeechRepositoryEngineSpeech extends Activity implements IRepositoryEngineSpeech {
+public class AndroidSpeechRepositoryEngineSpeech extends Activity
+        implements IRepositoryEngineSpeech {
 
     private TextToSpeech mTextToSpeech;
     private Context context;
@@ -33,8 +34,10 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements IRe
     private Intent mSpeechRecognizerIntent;
     private boolean mIsListening;
     private boolean mIsPlaying;
+    private String TAG;
 
-    public AndroidSpeechRepositoryEngineSpeech(Context context, final ISpeechInteractor.Callback callback) {
+    public AndroidSpeechRepositoryEngineSpeech(Context context,
+            final ISpeechInteractor.Callback callback) {
         this.context = context;
         this.callback = callback;
         mSpeechRecognizer = SpeechRecognizer.createSpeechRecognizer(this.context);
@@ -44,24 +47,25 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements IRe
                 RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
         mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,
                 this.context.getPackageName());
+        mSpeechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "es-ES");
 
         mSpeechRecognizer.setRecognitionListener(new RecognitionListenerAdapter() {
             @Override
             public void onEndOfSpeech() {
                 super.onEndOfSpeech();
-                callback.onEndSpeech();
+                callback.onEndSpeech(TAG);
             }
 
             @Override
             public void onReadyForSpeech(Bundle params) {
                 super.onReadyForSpeech(params);
-                callback.onBeginningOfSpeech();
+                callback.onBeginningOfSpeech(TAG);
             }
 
             @Override
             public void onError(int error) {
                 super.onError(error);
-                callback.onErrorListen(Integer.toString(error));
+                callback.onErrorListen(Integer.toString(error), TAG);
             }
 
             @Override
@@ -69,7 +73,7 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements IRe
                 super.onResults(results);
                 ArrayList<String> matches = results
                         .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                callback.onResponseListen(matches.get(0));
+                callback.onResponseListen(matches.get(0), TAG);
             }
 
             @Override
@@ -77,7 +81,7 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements IRe
                 super.onPartialResults(partialResults);
                 ArrayList<String> matches = partialResults
                         .getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                callback.onPartialResults(matches.get(0));
+                callback.onPartialResults(matches.get(0), TAG);
             }
         });
 
@@ -105,7 +109,8 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements IRe
     }
 
     @Override
-    public void startRecognition() {
+    public void startRecognition(String TAG) {
+        this.TAG = TAG;
         if (isConnected()) {
             if (!mIsListening) {
                 mSpeechRecognizer.startListening(mSpeechRecognizerIntent);
@@ -122,7 +127,7 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements IRe
 
     @Override
     public void startTextToSpeech(String toSpeak) {
-        mTextToSpeech.setLanguage(Locale.US);
+        mTextToSpeech.setLanguage(new Locale("es", "MEX"));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             mTextToSpeech.speak(toSpeak, TextToSpeech.QUEUE_ADD, null, "PRODUCTS");
         } else {
@@ -148,12 +153,11 @@ public class AndroidSpeechRepositoryEngineSpeech extends Activity implements IRe
 
     /**
      * Check connection
-     *
-     * @return
      */
     @Override
     public boolean isConnected() {
-        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(this.context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(this.context.CONNECTIVITY_SERVICE);
         NetworkInfo net = cm.getActiveNetworkInfo();
         return net != null && net.isAvailable() && net.isConnected();
     }

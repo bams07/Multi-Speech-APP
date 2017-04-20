@@ -22,11 +22,12 @@ import java.util.List;
  * Created by bams on 3/9/17.
  */
 
-public class DashboardPresenter implements IDashboardPresenter, ISpeechInteractor.Callback, IProductsInteractor.Callback {
+public class DashboardPresenter
+        implements IDashboardPresenter, ISpeechInteractor.Callback, IProductsInteractor.Callback {
 
     private IDashboardView view;
     private Context context;
-    private Enum selectedEngine = EngineSpeech.ANDROID_SPEECH;
+    private EngineSpeech selectedEngine = EngineSpeech.ANDROID_SPEECH;
     private SpeechInteractor speechInteractor;
     private ProductsInteractor productsInteractor;
 
@@ -34,18 +35,24 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
         this.view = view;
         this.context = context;
         productsInteractor = new ProductsInteractor(new FirebaseRepository(this));
-        speechInteractor = new SpeechInteractor(new AndroidSpeechRepositoryEngineSpeech(this.context, this), this.context);
+        speechInteractor =
+                new SpeechInteractor(new AndroidSpeechRepositoryEngineSpeech(this.context, this),
+                        this.context);
     }
 
     @Override
     public void onResume() {
-        view.setMenuSelectedEngine((EngineSpeech) selectedEngine);
+        view.setMenuSelectedEngine(selectedEngine);
     }
 
     @Override
-    public void addProduct(String data) {
-        Product item = new Product(data, "", "", new Date().getTime(), ProductStatus.PENDENT.toString());
-        productsInteractor.addProduct(item);
+    public void addProduct(Product product) {
+        productsInteractor.addProduct(product);
+    }
+
+    @Override
+    public void deleteProduct(String status, String uid) {
+        productsInteractor.deleteProduct(status, uid);
     }
 
     @Override
@@ -55,7 +62,11 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
 
     @Override
     public void onListenToAdd() {
-        speechInteractor.onListenToAdd();
+        speechInteractor.onListenToAdd("TO_ADD");
+    }
+
+    @Override public void onListenToBought() {
+        speechInteractor.onListenToBought("TO_BOUGHT");
     }
 
     @Override
@@ -95,46 +106,88 @@ public class DashboardPresenter implements IDashboardPresenter, ISpeechInteracto
         return speechInteractor.isSpeaking();
     }
 
+
+    /**
+     * LISTEN CALLBACKS
+     */
+
     @Override
     public void onChangeEngine(EngineSpeech engineSpeech) {
-        view.setMenuDisSelectedEngine((EngineSpeech) selectedEngine);
+        view.setMenuDisSelectedEngine(selectedEngine);
         view.setMenuSelectedEngine(engineSpeech);
         selectedEngine = engineSpeech;
     }
 
     @Override
-    public void onResponseListen(String data) {
-        view.setProductToAccept(data);
+    public void onResponseListen(String data, String TAG) {
+        switch (TAG) {
+            case "TO_ADD":
+                view.setProductToAccept(data);
+                break;
+            case "TO_BOUGHT":
+                view.setProductToBought(data);
+                break;
+        }
     }
 
     @Override
-    public void onBeginningOfSpeech() {
-        view.setSpeechStatus(SpeechStatus.LISTENING);
+    public void onBeginningOfSpeech(String TAG) {
+        switch (TAG) {
+            case "TO_ADD":
+                view.setSpeechStatus(SpeechStatus.LISTENING);
+                break;
+        }
     }
 
     @Override
-    public void onErrorListen(String error) {
-        view.setOnErrorListen(error);
+    public void onErrorListen(String error, String TAG) {
+        switch (TAG) {
+            case "TO_ADD":
+                view.setOnErrorListen(error);
+                break;
+        }
     }
 
     @Override
-    public void onPartialResults(String message) {
-        view.setOnPartialResults(message);
+    public void onPartialResults(String message, String TAG) {
+        switch (TAG) {
+            case "TO_ADD":
+                view.setOnPartialResults(message);
+                break;
+        }
     }
 
     @Override
-    public void onEndSpeech() {
-        view.setSpeechStatus(SpeechStatus.STOPPED);
+    public void onEndSpeech(String TAG) {
+        switch (TAG) {
+            case "TO_ADD":
+                view.setSpeechStatus(SpeechStatus.STOPPED);
+                break;
+        }
     }
 
     @Override
-    public void onAddedProduct() {
-        view.showProductAdded();
+    public EngineSpeech getEngineSpeech(){
+        return selectedEngine;
+    }
+
+
+    /**
+     * PRODUCTS CALLBACKS
+     */
+
+    @Override
+    public void onAddedProduct(Product product) {
+        view.showProductAdded(product);
         view.closeDialogListening();
     }
 
     @Override
     public void onGetItems(ArrayList<Product> items) {
+
+    }
+
+    @Override public void onBoughtProduct() {
 
     }
 }

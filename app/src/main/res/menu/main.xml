@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_bought_product"
+        android:icon="@drawable/ic_menu_send"
+        android:title="@string/action_bought_product"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_listen_list_products"
         android:icon="@drawable/ic_volume_up_black_36dp"
         android:title="@string/action_listen_products"
